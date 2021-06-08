@@ -1,0 +1,13 @@
+.odds-form {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 0.2em;
+    margin-bottom: 0.6em;
+}
+
+upcoming-game-display {
+    &>h3 {
+        margin: 0;
+        padding: 0;
+    }
+}

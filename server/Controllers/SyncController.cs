@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +22,28 @@ namespace Wettma.Controllers
             _oddsService = oddsService;
         }
 
+        private async Task StreamArray<T>(Utf8JsonWriter jsonWriter, TextWriter textWriter, IAsyncEnumerable<T> objects)
+        {
+            var options = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            };
+            var first = true;
+            jsonWriter.WriteStartArray();
+            await jsonWriter.FlushAsync();
+            await foreach (var game in objects)
+            {
+                if (!first)
+                {
+                    await textWriter.WriteAsync(",");
+                    await textWriter.FlushAsync();
+                }
+                first = false;
+                await JsonSerializer.SerializeAsync(Response.Body, game, options);
+            }
+            jsonWriter.WriteEndArray();
+        }
+
         [HttpGet]
         [AllowAnonymous]
         public async Task Get([FromQuery] SyncRequest request)
@@ -27,45 +51,19 @@ namespace Wettma.Controllers
             Response.ContentType = "application/json; charset=utf-8";
             Response.StatusCode = 200;
             Utf8JsonWriter writer;
-            var options = new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            };
+            StreamWriter streamWriter;
             await using ((writer = new Utf8JsonWriter(Response.Body)).ConfigureAwait(false))
+            await using ((streamWriter = new StreamWriter(Response.Body)).ConfigureAwait(false))
             {
                 writer.WriteStartObject();
                 writer.WritePropertyName("games");
-                writer.WriteStartArray();
-                await writer.FlushAsync();
-                await foreach (var game in _syncService.GetGames(request.GameId))
-                {
-                    await JsonSerializer.SerializeAsync(Response.Body, game, options);
-                }
-                writer.WriteEndArray();
+                await StreamArray(writer, streamWriter, _syncService.GetGames(request.GameId));
                 writer.WritePropertyName("results");
-                writer.WriteStartArray();
-                await writer.FlushAsync();
-                await foreach (var result in _syncService.GetResults(request.ResultId))
-                {
-                    await JsonSerializer.SerializeAsync(Response.Body, result, options);
-                }
-                writer.WriteEndArray();
+                await StreamArray(writer, streamWriter, _syncService.GetResults(request.ResultId));
                 writer.WritePropertyName("bets");
-                writer.WriteStartArray();
-                await writer.FlushAsync();
-                await foreach (var bet in _syncService.GetBets(request.BetId, User?.Identity?.Name))
-                {
-                    await JsonSerializer.SerializeAsync(Response.Body, bet, options);
-                }
-                writer.WriteEndArray();
+                await StreamArray(writer, streamWriter, _syncService.GetBets(request.BetId, User?.Identity?.Name));
                 writer.WritePropertyName("odds");
-                writer.WriteStartArray();
-                await writer.FlushAsync();
-                await foreach (var result in _oddsService.GetOdds())
-                {
-                    await JsonSerializer.SerializeAsync(Response.Body, result, options);
-                }
-                writer.WriteEndArray();
+                await StreamArray(writer, streamWriter, _oddsService.GetOdds());
                 writer.WriteEndObject();
                 await writer.FlushAsync();
             }

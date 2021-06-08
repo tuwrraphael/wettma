@@ -23,16 +23,18 @@ namespace Wettma.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "User",
+                name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
-                    GoogleId = table.Column<string>(type: "TEXT", nullable: true),
+                    GoogleId = table.Column<string>(type: "TEXT", nullable: false),
                     DisplayName = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.UniqueConstraint("AK_Users_DisplayName", x => x.DisplayName);
+                    table.UniqueConstraint("AK_Users_GoogleId", x => x.GoogleId);
                 });
 
             migrationBuilder.CreateTable(
@@ -100,9 +102,9 @@ namespace Wettma.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Bets_User_UserId",
+                        name: "FK_Bets_Users_UserId",
                         column: x => x.UserId,
-                        principalTable: "User",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -141,7 +143,7 @@ namespace Wettma.Migrations
                 name: "Odds");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Games");

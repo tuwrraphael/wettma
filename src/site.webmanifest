@@ -1,6 +1,6 @@
 {
-    "name": "Wettma",
-    "short_name": "Wettma",
+    "name": "wettma",
+    "short_name": "wettma",
     "description": "",
     "start_url": "./",
     "display": "standalone",

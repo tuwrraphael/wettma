@@ -9,7 +9,7 @@ using Wettma.Services;
 namespace Wettma.Migrations
 {
     [DbContext(typeof(WettmaContext))]
-    [Migration("20210607231004_Initial")]
+    [Migration("20210608104406_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -129,11 +129,16 @@ namespace Wettma.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("GoogleId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.HasAlternateKey("DisplayName");
+
+                    b.HasAlternateKey("GoogleId");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Wettma.Services.DbModels.Bet", b =>

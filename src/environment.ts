@@ -1,12 +1,12 @@
-let example_variable: string;
+let serverUrl: string;
 
 if (__ENVIRONMENT == "local") {
-    example_variable = "debug";
+    serverUrl = "https://localhost:44308";
 }
 else if (__ENVIRONMENT == "gh-pages") {
-    example_variable = "prod";
+    serverUrl = "https://localhost:44308";
 }
 
 export const environment = {
-    env: example_variable
+    serverUrl: serverUrl
 };

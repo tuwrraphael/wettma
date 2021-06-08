@@ -114,8 +114,11 @@ module.exports = (env, argv) => {
         },
         plugins: [
             new HtmlWebpackPlugin({
-                base: base, title: "Wettma",
-                template: 'src/index.html'
+                base: base,
+                title: "wettma",
+                template: 'src/index.html',
+                scriptLoading: "blocking",
+                inject: false
             }),
             new LicenseCheckerWebpackPlugin({
                 outputFilename: "licenses.txt",

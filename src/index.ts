@@ -1,4 +1,5 @@
 import "./styles.scss";
+import "./components/HomeComponent/HomeComponent";
 
 if ("serviceWorker" in navigator) {
     window.addEventListener("load", async () => {

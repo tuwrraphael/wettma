@@ -127,11 +127,16 @@ namespace Wettma.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("GoogleId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.HasAlternateKey("DisplayName");
+
+                    b.HasAlternateKey("GoogleId");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Wettma.Services.DbModels.Bet", b =>
