@@ -1,0 +1,9 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/server/.vs/Wettma
+/server/bin/Debug/net5.0
+/server/obj
+/server/appsettings.Development.json
+/server/wwwroot/App_Data/wettma.db
