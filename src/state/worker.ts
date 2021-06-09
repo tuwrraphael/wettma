@@ -243,6 +243,7 @@ async function logout(smg: LogoutAction) {
             userId: null
         }
     });
+    await getGames();
 }
 
 async function handleMessage(msg: Actions) {
