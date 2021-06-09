@@ -1,7 +1,7 @@
 {
     "name": "wettma",
     "short_name": "wettma",
-    "description": "",
+    "description": "EM-Tippspiel um Punkte",
     "start_url": "./",
     "display": "standalone",
     "icons": [
@@ -16,6 +16,6 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#ffffff",
-    "background_color": "#ffffff"
+    "theme_color": "#7cb342",
+    "background_color": "#7cb342"
 }

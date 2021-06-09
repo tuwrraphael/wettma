@@ -1,7 +1,7 @@
 {
   "name": "wettma",
   "version": "0.0.1",
-  "description": "",
+  "description": "EM-Tippspiel um Punkte",
   "main": "index.html",
   "dependencies": {
     "core-js": "^3.8.1",
