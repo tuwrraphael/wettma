@@ -40,7 +40,7 @@ export interface Bet {
 }
 
 export enum Choice {
-    Team1 = "Team1",
-    Team2 = "Team2",
-    Draw = "Draw"
+    Team1 = 0,
+    Team2 = 1,
+    Draw = 2
 }

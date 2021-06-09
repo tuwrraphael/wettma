@@ -19,7 +19,7 @@ export class OddsButton extends HTMLElement {
         this.abortController = new AbortController();
         abortableEventListener(this.btn, "click", e => {
             e.preventDefault();
-            this.dispatchEvent(new CustomEvent("oddsclicked", { bubbles: true, detail: this.getAttribute(ChoiceAttribute) }));
+            this.dispatchEvent(new CustomEvent("oddsclicked", { bubbles: true, detail: parseInt(this.getAttribute(ChoiceAttribute)) }));
         }, this.abortController.signal);
     }
 

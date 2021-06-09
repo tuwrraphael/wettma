@@ -1,6 +1,6 @@
 import { AccessToken } from "./AccessToken";
 import { AppRouter } from "./app-router";
-import { InitializeAccessToken } from "./state/requests/InitializeAccessToken";
+import { Initialize } from "./state/requests/Initialize";
 import { LoginPageOpened } from "./state/requests/LoginPageOpened";
 import { Store } from "./state/store";
 import "./styles.scss";
@@ -57,11 +57,10 @@ async function getAccessToken() {
 }
 
 async function run() {
-    let accessToken = await getAccessToken();
-    let store = Store.getInstance();
-
     let appRouter = AppRouter.getInstance();
+    appRouter.router.run();
 
+    let store = Store.getInstance();
     store.subscribe(state => {
         if (state.goToLogin && appRouter.activeRoute != "login") {
             store.postAction(new LoginPageOpened());
@@ -72,9 +71,8 @@ async function run() {
             appRouter.router.navigate("register", "wettma - Registrieren");
         }
     })
-    appRouter.router.run();
-    if (accessToken) {
-        store.postAction(new InitializeAccessToken(accessToken));
-    }
+
+    let accessToken = await getAccessToken();
+    store.postAction(new Initialize(accessToken));
 }
 run().catch(err => console.error(err));

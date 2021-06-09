@@ -33,7 +33,8 @@ namespace Wettma.Services
             {
                 if (null != userId)
                 {
-                    game.MyBet = await _wettmaContext.Bets.Where(b => b.UserId == userId.InternalId).Select(b => new Models.MyBet()
+                    var myGameBets = _wettmaContext.Bets.Where(b => b.UserId == userId.InternalId && b.Odds.GameId == game.Id);
+                    game.MyBet = await myGameBets.Where(bets => bets.TimePlaced == myGameBets.Max(d => d.TimePlaced)).Select(b => new Models.MyBet()
                     {
                         Choice = b.Choice,
                         Odds = new Models.Odds()

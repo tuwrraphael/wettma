@@ -11,4 +11,18 @@ export interface UpcomingGame {
         draw: number;
     }
     time: Date;
+    myBet: {
+        odds: {
+            team1: number;
+            team2: number;
+            draw: number;
+        };
+        choice: Choice;
+    },
+    saving: boolean
+    saveError?: {
+        oddsChanged?: boolean,
+        gameStarted?: boolean,
+        unknown?: boolean
+    }
 }

@@ -24,8 +24,8 @@ namespace Wettma.Services
             {
                 await _oddsRefreshService.RefreshOdds();
             }
-            await foreach (var odds in _wettmaContext.Games.Where(g => null == g.Result)
-                .Select(g => g.Odds.Where(d => d.ValidUntil > now.UtcDateTime).FirstOrDefault())
+            await foreach (var game in _wettmaContext.Games.Where(g => null == g.Result)
+                .Select(g => g.Odds.Where(d => d.ValidUntil == g.Odds.Max(g => g.ValidUntil)).SingleOrDefault())
                 .Select(g => new Models.Odds
                 {
                     Id = g.Id,
@@ -35,7 +35,7 @@ namespace Wettma.Services
                     DrawOdds = g.DrawOdds,
                 }).AsAsyncEnumerable())
             {
-                yield return odds;
+                yield return game;
             }
         }
     }

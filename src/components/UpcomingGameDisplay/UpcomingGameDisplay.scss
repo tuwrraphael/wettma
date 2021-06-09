@@ -10,4 +10,51 @@ upcoming-game-display {
         margin: 0;
         padding: 0;
     }
+
+    border-radius: 3px;
+    box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%),
+    0 2px 2px 0 rgb(0 0 0 / 14%),
+    0 1px 5px 0 rgb(0 0 0 / 12%);
+    display: block;
+    padding: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+
+
+@keyframes spin { 100% { transform:rotate(360deg); } }
+
+
+
+.status-msg {
+    display: flex;
+    align-items: center;
+
+    &>.material-icons {
+        margin-right: 0.2em;
+    }
+
+    &.saving {
+        &>.material-icons {
+            animation:spin 1s ease-in-out infinite;
+        }
+    }
+
+    &.my-bet {
+        &>.material-icons {
+            color: #97cf65;
+        }
+    }
+
+    &.error {
+        &>.material-icons {
+            color: #ba000d;
+        }
+    }
+
+    &.warning {
+        &>.material-icons {
+            color: #fdd835;
+        }
+    }
 }

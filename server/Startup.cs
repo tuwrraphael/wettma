@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +39,7 @@ namespace Wettma
             services.AddTransient<IOddsRefreshService, OddsRefreshService>();
             services.AddTransient<IOddsService, OddsService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IBetsService, BetsService>();
             services.AddHttpClient();
             services.AddControllers();
             services.Configure<CrawlingSettings>(Configuration);

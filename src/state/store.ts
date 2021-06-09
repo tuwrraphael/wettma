@@ -1,6 +1,4 @@
-import { AccessToken } from "../AccessToken";
 import { Action } from "./requests/Action";
-import { SyncAction } from "./requests/SyncAction";
 import { State } from "./state";
 
 interface Subscription<State> {

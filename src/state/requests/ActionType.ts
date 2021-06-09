@@ -1,9 +1,8 @@
 
 export const enum ActionType {
-    Sync,
     CreateBet,
     LoginPageOpened,
-    InitializeAccessToken,
+    Initialize,
     Register,
     Logout
 }

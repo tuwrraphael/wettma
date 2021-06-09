@@ -6,6 +6,7 @@ import { DisplayAttribute, OddsButton } from "../OddsButton/OddsButton";
 import { abortableEventListener } from "../../abortable-event-listener";
 import { Store } from "../../state/store";
 import { CreateBetAction } from "../../state/requests/CreateBetAction";
+import { Choice } from "../../api/models";
 
 let i18nFormat = new Intl.DateTimeFormat(["de-AT"], { weekday: "short", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
 
@@ -20,6 +21,13 @@ export class UpcomingGameDisplay extends HTMLElement {
     private abortController: AbortController;
     private game: UpcomingGame;
     private store: Store;
+    private myBetContainer: HTMLDivElement;
+    private myBetTeam: HTMLSpanElement;
+    private myBetOdds: HTMLSpanElement;
+    private saving: HTMLDivElement;
+    private oddsChangedError: HTMLDivElement;
+    private gameStartedError: HTMLDivElement;
+    private unknownError: HTMLDivElement;
 
     constructor() {
         super();
@@ -31,6 +39,13 @@ export class UpcomingGameDisplay extends HTMLElement {
         this.team2Odds = this.querySelector(`[data-ref="team2-odds"]`);
         this.oddsForm = this.querySelector(`[data-ref="odds-form"]`);
         this.timeDisplay = this.querySelector(`[data-ref="time"]`);
+        this.myBetContainer = this.querySelector(`[data-ref="my-bet"]`);
+        this.myBetTeam = this.querySelector(`[data-ref="my-bet-team"]`);
+        this.myBetOdds = this.querySelector(`[data-ref="my-bet-odds"]`);
+        this.saving = this.querySelector(`[data-ref="saving"]`);
+        this.oddsChangedError = this.querySelector(`[data-ref="odds-changed-error"]`);
+        this.gameStartedError = this.querySelector(`[data-ref="game-started-error"]`);
+        this.unknownError = this.querySelector(`[data-ref="save-error"]`)
         this.store = Store.getInstance();
     }
 
@@ -56,6 +71,16 @@ export class UpcomingGameDisplay extends HTMLElement {
             this.team2Odds.setAttribute(DisplayAttribute, `${game.odds.team2}`);
             this.timeDisplay.innerText = i18nFormat.format(game.time);
         }
+        this.myBetContainer.style.display = game.myBet && !game.saving ? "flex" : "none";
+        if (game.myBet) {
+            this.myBetTeam.innerText = game.myBet.choice == Choice.Team1 ? game.team1 : game.myBet.choice == Choice.Team2 ? game.team2 : "Unentschieden";
+            this.myBetOdds.innerText = `${game.myBet.choice == Choice.Team1 ? game.myBet.odds.team1 : game.myBet.choice == Choice.Team2 ? game.myBet.odds.team2 : game.myBet.odds.draw}`;
+
+        }
+        this.saving.style.display = game.saving ? "flex" : "none";
+        this.oddsChangedError.style.display = game.saveError?.oddsChanged ? "flex" : "none";
+        this.gameStartedError.style.display = game.saveError?.gameStarted ? "flex" : "none";
+        this.unknownError.style.display = game.saveError?.unknown ? "flex" : "none";
     }
 }
 

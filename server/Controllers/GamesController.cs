@@ -19,7 +19,6 @@ namespace Wettma.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public async Task Get()
         {
             Response.ContentType = "application/json; charset=utf-8";

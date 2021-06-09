@@ -12,7 +12,7 @@ namespace Wettma.Services
 {
     public class OddsRefreshService : IOddsRefreshService
     {
-        private const int ValidMinutes = 120;
+        private const int ValidMinutes = 15;
         private readonly WettmaContext _wettmaContext;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly CrawlingSettings _crawlingSettings;
@@ -67,8 +67,7 @@ namespace Wettma.Services
                 }
                 _lastCrawlTime = now;
                 var webodds = await Crawl();
-                var needRefresh = _wettmaContext.Games.Where(g => null == g.Result && !g.Odds.Any(o => o.ValidUntil > DateTime.UtcNow));
-                await foreach (var openGame in needRefresh.AsAsyncEnumerable())
+                await foreach (var openGame in _wettmaContext.Games.Where(g => null == g.Result).AsAsyncEnumerable())
                 {
                     var matchDescription = webodds.Where(m => ((m.Team1 == openGame.Team1 && m.Team2 == openGame.Team2) ||
                         (m.Team2 == openGame.Team1 && m.Team1 == openGame.Team2)) && Math.Abs((m.Time.UtcDateTime - openGame.Time).TotalSeconds) < 1).SingleOrDefault();
@@ -81,7 +80,7 @@ namespace Wettma.Services
                             if (OddsEqual(matchDescription.Odds, lastOdds, switchTeams))
                             {
                                 lastOdds.ValidUntil = now.AddMinutes(ValidMinutes).UtcDateTime;
-                                await _wettmaContext.SaveChangesAsync();
+                                continue;
                             }
                         }
 
@@ -94,9 +93,9 @@ namespace Wettma.Services
                             ValidUntil = now.AddMinutes(ValidMinutes).UtcDateTime,
                         };
                         await _wettmaContext.Odds.AddAsync(dbOdds);
-                        await _wettmaContext.SaveChangesAsync();
                     }
                 }
+                await _wettmaContext.SaveChangesAsync();
             }
             finally
             {

@@ -3,7 +3,7 @@ import { Action as Action } from "./Action";
 import { ActionType as ActionType } from "./ActionType";
 
 
-export class InitializeAccessToken implements Action {
+export class Initialize implements Action {
     constructor(public accessToken: AccessToken) { }
-    readonly type = ActionType.InitializeAccessToken;
+    readonly type = ActionType.Initialize;
 }
