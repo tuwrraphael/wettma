@@ -33,7 +33,6 @@ namespace Wettma.Services
                     Team1Odds = g.Team1Odds,
                     Team2Odds = g.Team2Odds,
                     DrawOdds = g.DrawOdds,
-                    ValidUntil = new DateTimeOffset(g.ValidUntil, TimeSpan.Zero)
                 }).AsAsyncEnumerable())
             {
                 yield return odds;

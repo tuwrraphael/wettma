@@ -2,8 +2,7 @@ import { Action as Action } from "./Action";
 import { ActionType as ActionType } from "./ActionType";
 
 
-export class SyncAction implements Action {
+export class LoginPageOpened implements Action {
     constructor() { }
-    readonly type = ActionType.Sync;
+    readonly type = ActionType.LoginPageOpened;
 }
-

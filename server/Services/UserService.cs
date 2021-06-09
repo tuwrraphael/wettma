@@ -28,9 +28,9 @@ namespace Wettma.Services
             return await _wettmaContext.Users.Where(u => u.GoogleId == sub).SingleOrDefaultAsync();
         }
 
-        public async Task<Profile> GetProfile(string userId)
+        public async Task<Profile> GetProfile(UserId userId)
         {
-            return await _wettmaContext.Users.Where(u => u.Id == userId).Select(p => new Models.Profile()
+            return await _wettmaContext.Users.Where(u => u.Id == userId.InternalId).Select(p => new Models.Profile()
             {
                 DisplayName = p.DisplayName,
                 UserId = p.Id
@@ -44,13 +44,13 @@ namespace Wettma.Services
                 throw new InvalidDisplayNameException();
             }
             var googleClient = _httpClientFactory.CreateClient();
-            var res = await googleClient.GetAsync($"https://oauth2.googleapis.com/tokeninfo?access_token={googleToken}");
+            var res = await googleClient.GetAsync($"https://oauth2.googleapis.com/tokeninfo?id_token={googleToken}");
             if (!res.IsSuccessStatusCode)
             {
                 throw new InvalidTokenException();
             }
             var result = await JsonSerializer.DeserializeAsync<TokenValidationResult>(await res.Content.ReadAsStreamAsync(), new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
-            if (result.Audience != _authSettings.GoogleClientID)
+            if (result.Aud != _authSettings.GoogleClientID)
             {
                 throw new InvalidTokenException();
             }
@@ -66,7 +66,7 @@ namespace Wettma.Services
 
     public class TokenValidationResult
     {
-        public string Audience { get; set; }
+        public string Aud { get; set; }
         public string Sub { get; set; }
     }
 }

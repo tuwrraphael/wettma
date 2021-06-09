@@ -1,4 +1,4 @@
-import { Choice } from "../../api/models";
+import { abortableEventListener } from "../../abortable-event-listener";
 import template from "./OddsRadioButton.html";
 import "./OddsRadioButton.scss";
 
@@ -10,6 +10,7 @@ export class OddsRadioButton extends HTMLElement {
     private input: HTMLInputElement;
     private oddsLabel: HTMLLabelElement;
     private label: HTMLLabelElement;
+    private abortController: AbortController;
 
     constructor() {
         super();
@@ -17,15 +18,19 @@ export class OddsRadioButton extends HTMLElement {
         this.input = this.querySelector("input");
         this.oddsLabel = this.querySelector(`[data-ref="label"]`);
         this.label = this.querySelector("label");
+
     }
 
     connectedCallback() {
-
-
+        this.abortController = new AbortController();
+        abortableEventListener(this.input, "click", e => {
+            e.preventDefault();
+            this.dispatchEvent(new CustomEvent("oddsclicked", { bubbles: true, detail: this.getAttribute(ChoiceAttribute) }));
+        }, this.abortController.signal);
     }
 
     disconnectedCallback() {
-
+        this.abortController.abort();
     }
 
     attributeChangedCallback() {

@@ -7,6 +7,7 @@ namespace Wettma.RequestModels
         [Required]
         public string Token { get; set; }
         [Required]
+        [MaxLength(15)]
         public string DisplayName { get; set; }
     }
 }

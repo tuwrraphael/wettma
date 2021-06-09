@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wettma.RequestModels;
 using Wettma.Services;
+using System.Linq;
 
 namespace Wettma.Controllers
 {
@@ -37,14 +38,14 @@ namespace Wettma.Controllers
             {
                 return ValidationProblem("Token Invalid");
             }
-            return CreatedAtAction("profile", await _userService.GetProfile(User.Identity.Name));
+            return CreatedAtAction("profile", null);
         }
 
         [HttpGet("profile")]
         [Authorize]
         public async Task<IActionResult> Profile()
         {
-            return Ok(await _userService.GetProfile(User.Identity.Name));
+            return Ok(await _userService.GetProfile(this.GetUserId()));
         }
     }
 }

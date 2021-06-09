@@ -17,7 +17,8 @@
     "sourceMap": true,
     "types": [
       "@types/node",
-      "@types/webpack-env"
+      "@types/webpack-env",
+      "@types/webappsec-credential-management"
     ],
     "allowSyntheticDefaultImports": true
   },

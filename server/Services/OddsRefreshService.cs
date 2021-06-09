@@ -12,7 +12,7 @@ namespace Wettma.Services
 {
     public class OddsRefreshService : IOddsRefreshService
     {
-        private const int ValidMinutes = 16;
+        private const int ValidMinutes = 120;
         private readonly WettmaContext _wettmaContext;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly CrawlingSettings _crawlingSettings;

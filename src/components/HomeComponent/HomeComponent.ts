@@ -1,5 +1,6 @@
 import { ArrayToElementRenderer } from "../../ArrayToElementRenderer";
 import { UpcomingGame } from "../../models/UpcomingGame";
+import { SyncAction } from "../../state/requests/SyncAction";
 import { State } from "../../state/state";
 import { Store } from "../../state/store";
 import { UpcomingGameDisplay } from "../UpcomingGameDisplay/UpcomingGameDisplay";
@@ -29,7 +30,7 @@ export class HomeComponent extends HTMLElement {
     connectedCallback() {
         this.abortController = new AbortController();
         this.store.subscribe(s => this.updateState(s), this.abortController.signal);
-        this.store.sync();
+        this.store.postAction(new SyncAction());
     }
 
     updateState(s: State) {

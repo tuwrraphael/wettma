@@ -34,7 +34,7 @@ namespace Wettma
                 options.UseSqlite($"Data Source={WebHostEnvironment.WebRootPath}\\App_Data\\wettma.db",
                     sql => sql.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name)));
 
-            services.AddTransient<ISyncService, SyncService>();
+            services.AddTransient<IGamesService, GamesService>();
             services.AddTransient<IOddsRefreshService, OddsRefreshService>();
             services.AddTransient<IOddsService, OddsService>();
             services.AddTransient<IUserService, UserService>();
@@ -43,7 +43,7 @@ namespace Wettma
             services.Configure<CrawlingSettings>(Configuration);
             services.Configure<AuthSettings>(Configuration);
             services.AddOptions();
-            services.AddAuthentication()
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
               .AddJwtBearer(options =>
               {
                   options.Authority = "https://accounts.google.com/";
@@ -71,7 +71,7 @@ namespace Wettma
                                     {
                                         new Claim(ClaimTypes.Name,user.Id)
                                     };
-                                  var appIdentity = new ClaimsIdentity(claims);
+                                  var appIdentity = new ClaimsIdentity(claims, "wettma");
                                   context.Principal.AddIdentity(appIdentity);
                               }
                           }
@@ -101,6 +101,8 @@ namespace Wettma
             app.UseRouting();
 
             app.UseCors("P");
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

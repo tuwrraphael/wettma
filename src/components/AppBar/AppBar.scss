@@ -1,0 +1,31 @@
+.app-bar__container {
+    display: flex;
+
+    background-color: #7cb342;
+    justify-content: center;
+}
+
+.app-bar {
+    max-width: 40em;
+    width: 100%;
+    padding-left: 1em;
+    color: white;
+
+    &>h1 {
+        display: inline-flex;
+        align-items: center;
+        padding: 0;
+        margin: 0;
+        
+
+        & > .material-icons {
+            margin-top: 0.1em;
+            padding-right: 0.1em;
+        }
+    }
+
+    height: 3em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

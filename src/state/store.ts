@@ -1,4 +1,5 @@
 import { AccessToken } from "../AccessToken";
+import { Action } from "./requests/Action";
 import { SyncAction } from "./requests/SyncAction";
 import { State } from "./state";
 
@@ -45,7 +46,7 @@ export class Store {
         }
     }
 
-    sync() {
-        this.worker.postMessage(new SyncAction());
+    postAction(action: Action) {
+        this.worker.postMessage(action);
     }
 }

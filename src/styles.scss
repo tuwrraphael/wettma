@@ -14,3 +14,15 @@ body {
 h1,h2,h3 {
     font-weight: 400;
 }
+
+.container {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    padding-left: 1em;
+}
+
+.section {
+    max-width: 40em;
+    width: 100%;
+}

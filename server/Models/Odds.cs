@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Wettma.Models
+﻿namespace Wettma.Models
 {
     public class Odds
     {
@@ -9,6 +7,5 @@ namespace Wettma.Models
         public double Team1Odds { get; set; }
         public double Team2Odds { get; set; }
         public double? DrawOdds { get; set; }
-        public DateTimeOffset ValidUntil { get; set; }
     }
 }

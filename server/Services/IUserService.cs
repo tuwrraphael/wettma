@@ -8,6 +8,6 @@ namespace Wettma.Services
     {
         Task<User> FindByGoogleSub(string sub);
         Task Register(string googleToken, string displayName);
-        Task<Profile> GetProfile(string userId);
+        Task<Profile> GetProfile(UserId userId);
     }
 }
