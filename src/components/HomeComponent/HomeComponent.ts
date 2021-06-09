@@ -29,6 +29,7 @@ export class HomeComponent extends HTMLElement {
     connectedCallback() {
         this.abortController = new AbortController();
         this.store.subscribe(s => this.updateState(s), this.abortController.signal);
+        this.updateState(this.store.state);
     }
 
     updateState(s: State) {

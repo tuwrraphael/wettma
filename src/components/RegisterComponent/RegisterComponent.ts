@@ -1,8 +1,7 @@
-import { throws } from "assert";
 import { abortableEventListener } from "../../abortable-event-listener";
 import { AppRouter } from "../../app-router";
 import { RegisterAction } from "../../state/requests/RegisterAction";
-import { RequestState } from "../../state/state";
+import { RequestState, State } from "../../state/state";
 import { Store } from "../../state/store";
 import template from "./RegisterComponent.html";
 import "./RegisterComponent.scss";
@@ -26,12 +25,15 @@ export class RegisterComponent extends HTMLElement {
     connectedCallback() {
         this.abortController = new AbortController();
         abortableEventListener(this.form, "submit", ev => this.onFormSubmit(ev), this.abortController.signal);
-        this.store.subscribe(state => {
-            if (state.register == RequestState.Successful) {
-                this.router.router.navigate("", "wettma", true);
-            }
-            this.registerFailed.style.display = state.register == RequestState.Failed ? "inline" : "none";
-        }, this.abortController.signal);
+        this.store.subscribe(s => this.updateState(s), this.abortController.signal);
+        this.updateState(this.store.state);
+    }
+
+    updateState(s: State) {
+        if (s.register == RequestState.Successful) {
+            this.router.router.navigate("", "wettma", true);
+        }
+        this.registerFailed.style.display = s.register == RequestState.Failed ? "inline" : "none";
     }
 
     onFormSubmit(ev: Event) {

@@ -1,6 +1,7 @@
 import { abortableEventListener } from "../../abortable-event-listener";
 import { AppRouter } from "../../app-router";
 import { LogoutAction } from "../../state/requests/LogoutAction";
+import { State } from "../../state/state";
 import { Store } from "../../state/store";
 import template from "./AppBar.html";
 import "./AppBar.scss";
@@ -34,12 +35,15 @@ export class AppBar extends HTMLElement {
         abortableEventListener(this.loginBtn, "click", ev => {
             this.router.router.navigate("login", "wettma - Login");
         }, this.abortController.signal);
-        this.store.subscribe(s => {
-            this.displayName.innerText = s.displayName || "";
-            this.displayName.style.display = s.accessToken ? "inline" : "none";
-            this.logoutBtn.style.display = s.accessToken ? "inline" : "none";
-            this.loginBtn.style.display = s.accessToken ? "none" : "inline";
-        }, this.abortController.signal);
+        this.store.subscribe(s => this.updateState(s), this.abortController.signal);
+        this.updateState(this.store.state);
+    }
+
+    updateState(s:State) {
+        this.displayName.innerText = s.displayName || "";
+        this.displayName.style.display = s.accessToken ? "inline" : "none";
+        this.logoutBtn.style.display = s.accessToken ? "inline" : "none";
+        this.loginBtn.style.display = s.accessToken ? "none" : "inline";
     }
 
     disconnectedCallback() {

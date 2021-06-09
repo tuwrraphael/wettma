@@ -9,6 +9,11 @@ export class Store {
     private static instance: Store = null;
     private worker: Worker;
     private subscriptions: Subscription<State>[];
+    private _state: State = null;
+
+    get state() {
+        return this._state;
+    }
 
     static getInstance() {
         if (null == this.instance) {
@@ -21,10 +26,10 @@ export class Store {
         this.subscriptions = [];
         this.worker = new Worker(new URL("./worker", import.meta.url));
         this.worker.addEventListener("message", ev => {
-            let newState: State = ev.data;
+            this._state = ev.data;
             for (let s of this.subscriptions) {
                 try {
-                    s.call(newState);
+                    s.call(this._state);
                 }
                 catch (err) {
                     console.error(`Error while updating`, err);
