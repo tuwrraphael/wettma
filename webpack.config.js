@@ -27,7 +27,7 @@ module.exports = (env, argv) => {
     const analyze = env && env.analyze;
 
     const base = {
-        "gh-pages": "/wettma",
+        "gh-pages": "/wettma/",
         "local": "/"
     }[environment];
 
