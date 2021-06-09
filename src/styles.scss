@@ -26,3 +26,42 @@ h1,h2,h3 {
     max-width: 40em;
     width: 100%;
 }
+
+$btn-background : #97cf65;
+$btn-border: #366f00;
+$btn-background-hover: lighten($btn-background ,10);
+$btn-background-active: #97cf65;
+
+
+button {
+    display: inline-block;
+    padding: 0.5em 1em;
+    font-weight: 500;
+    border-radius: 3px;
+    background-color: #97cf65;
+    transition: .2s cubic-bezier(.3, 0, .5, 1);
+    transition-property: background-color, color;
+    cursor: pointer;
+    box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
+    border : 0.1em solid transparent;
+    outline: none;
+
+    &:hover {
+        background-color: $btn-background-hover;
+        transition-duration: .1s;
+    }
+
+    &:focus-visible {
+        border-color: $btn-border;
+    }
+
+    &:active {
+        background-color: $btn-background-active;
+        transition: none;
+    }
+
+    &:disabled {
+        color: #999;
+        background-color: #ddd;
+    }
+}

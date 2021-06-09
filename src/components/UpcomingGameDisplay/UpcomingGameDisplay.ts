@@ -1,8 +1,8 @@
 import { UpcomingGame } from "../../models/UpcomingGame";
 import template from "./UpcomingGameDisplay.html";
 import "./UpcomingGameDisplay.scss";
-import "../OddsRadioButton/OddsRadioButton";
-import { DisplayAttribute, IdPrefixAttribute, OddsRadioButton } from "../OddsRadioButton/OddsRadioButton";
+import "../OddsButton/OddsButton";
+import { DisplayAttribute, OddsButton } from "../OddsButton/OddsButton";
 import { abortableEventListener } from "../../abortable-event-listener";
 import { Store } from "../../state/store";
 import { CreateBetAction } from "../../state/requests/CreateBetAction";
@@ -12,9 +12,9 @@ let i18nFormat = new Intl.DateTimeFormat(["de-AT"], { weekday: "short", day: "2-
 export class UpcomingGameDisplay extends HTMLElement {
     private team1Label: HTMLSpanElement;
     private team2Label: HTMLSpanElement;
-    private team1Odds: OddsRadioButton;
-    private drawOdds: OddsRadioButton;
-    private team2Odds: OddsRadioButton;
+    private team1Odds: OddsButton;
+    private drawOdds: OddsButton;
+    private team2Odds: OddsButton;
     private oddsForm: HTMLFormElement;
     private timeDisplay: HTMLSpanElement;
     private abortController: AbortController;
@@ -49,9 +49,6 @@ export class UpcomingGameDisplay extends HTMLElement {
         this.game = game;
         this.team1Label.innerText = game.team1;
         this.team2Label.innerText = game.team2;
-        for (let btn of [this.team1Odds, this.drawOdds, this.team2Odds]) {
-            btn.setAttribute(IdPrefixAttribute, `game${game.id}`);
-        }
         this.oddsForm.style.visibility = game.odds ? "visible" : "hidden";
         if (game.odds) {
             this.team1Odds.setAttribute(DisplayAttribute, `${game.odds.team1}`);
