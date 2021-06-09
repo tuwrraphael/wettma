@@ -4,7 +4,7 @@ if (__ENVIRONMENT == "local") {
     serverUrl = "https://localhost:44308";
 }
 else if (__ENVIRONMENT == "gh-pages") {
-    serverUrl = "https://localhost:44308";
+    serverUrl = "https://wettma.azurewebsites.net";
 }
 
 export const environment = {
