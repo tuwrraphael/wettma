@@ -86,7 +86,7 @@ namespace Wettma
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials()
-                .WithOrigins("http://localhost:9000", "https://wettma.kesal.at", "https://tuwrraphael.github.io/wettma"));
+                .WithOrigins("http://localhost:9000", "https://wettma.kesal.at", "https://tuwrraphael.github.io"));
             });
         }
 
