@@ -32,7 +32,7 @@ namespace Wettma
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<WettmaContext>(options =>
-                options.UseSqlite($"Data Source={WebHostEnvironment.WebRootPath}\\App_Data\\wettma.db",
+                options.UseSqlite($"Data Source={Path.Combine(WebHostEnvironment.WebRootPath, "App_Data", "wettma.db")}",
                     sql => sql.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name)));
 
             services.AddTransient<IGamesService, GamesService>();
@@ -86,7 +86,7 @@ namespace Wettma
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials()
-                .WithOrigins("http://localhost:9000", "https://wettma.kesal.at"));
+                .WithOrigins("http://localhost:9000", "https://wettma.kesal.at", "https://tuwrraphael.github.io/wettma"));
             });
         }
 
