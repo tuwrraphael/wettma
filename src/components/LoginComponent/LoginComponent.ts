@@ -18,7 +18,7 @@ export class LoginComponent extends HTMLElement {
             navigator.credentials.get({
                 federated: {
                     providers: [
-                        "https://accounts.google.com"
+                        "https://google.wettma.kesal.at"
                     ]
                 },
                 mediation: "optional"

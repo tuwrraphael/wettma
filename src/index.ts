@@ -38,7 +38,7 @@ async function getAccessToken() {
             var cred = await navigator.credentials.create({
                 federated: {
                     id: tokenInfo.sub,
-                    provider: "https://accounts.google.com"
+                    provider: "https://google.wettma.kesal.at/"
                 }
             });
             await navigator.credentials.store(cred);
