@@ -1,7 +1,7 @@
 let serverUrl: string;
 
 if (__ENVIRONMENT == "local") {
-    serverUrl = "https://localhost:44308";
+    serverUrl = "https://wettma.azurewebsites.net";
 }
 else if (__ENVIRONMENT == "gh-pages") {
     serverUrl = "https://wettma.azurewebsites.net";

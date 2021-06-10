@@ -30,6 +30,9 @@ export class RegisterComponent extends HTMLElement {
     }
 
     updateState(s: State) {
+        if (null == s) {
+            return;
+        }
         if (s.register == RequestState.Successful) {
             this.router.router.navigate("", "wettma", true);
         }

@@ -40,6 +40,9 @@ export class AppBar extends HTMLElement {
     }
 
     updateState(s:State) {
+        if (null == s) {
+            return;
+        }
         this.displayName.innerText = s.displayName || "";
         this.displayName.style.display = s.accessToken ? "inline" : "none";
         this.logoutBtn.style.display = s.accessToken ? "inline" : "none";

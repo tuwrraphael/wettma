@@ -33,6 +33,9 @@ export class HomeComponent extends HTMLElement {
     }
 
     updateState(s: State) {
+        if (null == s) {
+            return;
+        }
         this.upcomingGamesRenderer.update(s.upcomingGames, (li, g) => {
             let e: UpcomingGameDisplay = <UpcomingGameDisplay>li.children[0];
             e.setGame(g);
