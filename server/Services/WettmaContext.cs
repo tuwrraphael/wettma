@@ -46,6 +46,8 @@ namespace Wettma.Services
                 .WithOne(o => o.Game)
                 .HasForeignKey<GameResult>(o => o.GameId)
                 .IsRequired(false);
+            modelBuilder.Entity<Game>().Property(g => g.Points)
+                .HasDefaultValue(2);
 
             modelBuilder.Entity<GameResult>()
                 .HasKey(g => g.Id);

@@ -12,6 +12,7 @@ namespace Wettma.Services.DbModels
         public DateTime Time { get; set; }
         public List<Odds> Odds { get; set; }
         public GameResult Result { get; set; }
+        public double Points { get; set; }
     }
 
     public class GameResult

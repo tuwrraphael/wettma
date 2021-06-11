@@ -36,4 +36,34 @@ namespace Wettma.Controllers
             }
         }
     }
+    [ApiController]
+    [Route("[controller]")]
+    public class ScoreboardController : ControllerBase
+    {
+        private readonly IScoreboardService _scoreboardService;
+
+        public ScoreboardController(IScoreboardService scoreboardService)
+        {
+            _scoreboardService = scoreboardService;
+        }
+
+
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task Get()
+        {
+            Response.ContentType = "application/json; charset=utf-8";
+            Response.StatusCode = 200;
+            Utf8JsonWriter writer;
+            StreamWriter streamWriter;
+            await using ((writer = new Utf8JsonWriter(Response.Body)).ConfigureAwait(false))
+            await using ((streamWriter = new StreamWriter(Response.Body)).ConfigureAwait(false))
+            {
+                await this.StreamArray(writer, streamWriter, _scoreboardService.GetEntries());
+                await writer.FlushAsync();
+            }
+        }
+    }
+
 }
