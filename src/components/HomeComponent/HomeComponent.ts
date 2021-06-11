@@ -1,3 +1,5 @@
+import { abortableEventListener } from "../../abortable-event-listener";
+import { AppRouter } from "../../app-router";
 import { ArrayToElementRenderer } from "../../ArrayToElementRenderer";
 import { UpcomingGame } from "../../models/UpcomingGame";
 import { State } from "../../state/state";
@@ -11,11 +13,13 @@ export class HomeComponent extends HTMLElement {
     private abortController: AbortController;
     private upcomingGamesList: HTMLOListElement;
     private upcomingGamesRenderer: ArrayToElementRenderer<UpcomingGame, HTMLLIElement, number>;
+    private router: AppRouter;
 
     constructor() {
         super();
         this.innerHTML = template;
         this.store = Store.getInstance();
+        this.router = AppRouter.getInstance();
         this.upcomingGamesList = this.querySelector("#upcoming-games");
         this.upcomingGamesRenderer = new ArrayToElementRenderer(this.upcomingGamesList,
             g => g.id,
@@ -30,6 +34,10 @@ export class HomeComponent extends HTMLElement {
         this.abortController = new AbortController();
         this.store.subscribe(s => this.updateState(s), this.abortController.signal);
         this.updateState(this.store.state);
+        abortableEventListener(this.querySelector("#explanation-link"), "click", e => {
+            e.preventDefault();
+            this.router.router.navigate("explanation", "Anleitung - wettma");
+        }, this.abortController.signal);
     }
 
     updateState(s: State) {

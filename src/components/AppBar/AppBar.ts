@@ -37,6 +37,10 @@ export class AppBar extends HTMLElement {
         }, this.abortController.signal);
         this.store.subscribe(s => this.updateState(s), this.abortController.signal);
         this.updateState(this.store.state);
+        abortableEventListener(this.querySelector("a"), "click", e => {
+            e.preventDefault();
+            this.router.router.navigate("", "wettma");
+        }, this.abortController.signal);
     }
 
     updateState(s:State) {

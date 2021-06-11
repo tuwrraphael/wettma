@@ -11,7 +11,9 @@ body {
     padding: 0;
 }
 
-h1,h2,h3 {
+h1,
+h2,
+h3 {
     font-weight: 400;
 }
 
@@ -29,7 +31,7 @@ h1,h2,h3 {
 
 $btn-background : #97cf65;
 $btn-border: #366f00;
-$btn-background-hover: lighten($btn-background ,10);
+$btn-background-hover: lighten($btn-background, 10);
 $btn-background-active: #97cf65;
 
 
@@ -44,7 +46,7 @@ button {
     cursor: pointer;
     border-radius: 3px;
     box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
-    border : 0.1em solid transparent;
+    border: 0.1em solid transparent;
     outline: none;
 
     &:hover {
@@ -65,4 +67,22 @@ button {
         color: #999;
         background-color: #ddd;
     }
+}
+
+a {
+    color: #1e88e5;
+
+    :visited {
+        color: #1e88e5;
+    }
+
+    :active {
+        color: #1e88e5;
+    }
+}
+
+.link-section {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0.2em;
 }

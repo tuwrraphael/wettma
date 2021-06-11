@@ -1,5 +1,6 @@
 import { ContainerRouteRenderer, Router } from "route-it";
 import { AsyncRouteResolver } from "route-it/dist/router";
+import { ExplanationComponent } from "./components/ExplanationComponent/ExplanationComponent";
 import { HomeComponent } from "./components/HomeComponent/HomeComponent";
 import { LoginComponent } from "./components/LoginComponent/LoginComponent";
 import { RegisterComponent } from "./components/RegisterComponent/RegisterComponent";
@@ -26,6 +27,9 @@ export class AppRouter {
                     case "register":
                         self.activeRoute = "register";
                         return new RegisterComponent();
+                    case "explanation":
+                        self.activeRoute = "explanation";
+                        return new ExplanationComponent();
                     default:
                         self.activeRoute = "home";
                         let c = new HomeComponent();
