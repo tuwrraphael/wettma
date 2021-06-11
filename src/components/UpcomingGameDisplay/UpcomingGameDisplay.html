@@ -1,12 +1,16 @@
-<h3>
-    <span data-ref="team1"></span> -
-    <span data-ref="team2"></span>
-</h3>
-<span data-ref="time"></span>
 <form data-ref="odds-form" class="odds-form">
-    <odds-button choice="0" data-ref="team1-odds"></odds-button>
-    <odds-button choice="2" data-ref="draw-odds"></odds-button>
-    <odds-button choice="1" data-ref="team2-odds"></odds-button>
+    <h3 class="team1">
+        <span class="flag-icon flag-icon-tr" data-ref="team1-flag"></span>
+        <span data-ref="team1"></span>
+    </h3>
+    <h3 class="team2">
+        <span class="flag-icon flag-icon-it" data-ref="team2-flag"></span>
+        <span data-ref="team2"></span>
+    </h3>
+    <span data-ref="time" class="time"></span>
+    <odds-button class="choice-team1" choice="0" data-ref="team1-odds"></odds-button>
+    <odds-button class="choice-draw" choice="2" data-ref="draw-odds"></odds-button>
+    <odds-button class="choice-team2" data-ref="team2-odds"></odds-button>
 </form>
 <div data-ref="my-bet" class="status-msg my-bet">
     <span class="material-icons" title="Tipp abgegeben">

@@ -101,6 +101,11 @@ module.exports = (env, argv) => {
                         }
                     ]
                 },
+                {
+                    test: /\.svg$/,
+                    type: 'asset',
+                    // use: 'svgo-loader'
+                },
             ],
         },
         resolve: {

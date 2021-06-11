@@ -10,6 +10,35 @@ import { Choice } from "../../api/models";
 
 let i18nFormat = new Intl.DateTimeFormat(["de-AT"], { weekday: "short", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
 
+import("./flags");
+
+let flags: { [s: string]: string } = {
+    "Türkei": "tr",
+    "Italien": "it",
+    "Wales": "gb-wls",
+    "Schweiz": "ch",
+    "Schweden": "se",
+    "Finnland": "fi",
+    "Deutschland": "de",
+    "England": "gb-eng",
+    "Dänemark": "dk",
+    "Russland": "ru",
+    "Österreich": "at",
+    "Belgien": "be",
+    "Kroatien": "hr",
+    "Nordmazedonien": "mk",
+    "Niederlande": "nl",
+    "Ukraine": "ua",
+    "Spanien": "es",
+    "Schottland": "gb-sct",
+    "Tschechien": "cz",
+    "Polen": "pl",
+    "Slowakei": "sk",
+    "Portugal": "pt",
+    "Ungarn": "hu",
+    "Frankreich": "fr"
+};
+
 export class UpcomingGameDisplay extends HTMLElement {
     private team1Label: HTMLSpanElement;
     private team2Label: HTMLSpanElement;
@@ -28,6 +57,8 @@ export class UpcomingGameDisplay extends HTMLElement {
     private oddsChangedError: HTMLDivElement;
     private gameStartedError: HTMLDivElement;
     private unknownError: HTMLDivElement;
+    private team2Flag: HTMLSpanElement;
+    private team1Flag: HTMLSpanElement;
 
     constructor() {
         super();
@@ -46,6 +77,8 @@ export class UpcomingGameDisplay extends HTMLElement {
         this.oddsChangedError = this.querySelector(`[data-ref="odds-changed-error"]`);
         this.gameStartedError = this.querySelector(`[data-ref="game-started-error"]`);
         this.unknownError = this.querySelector(`[data-ref="save-error"]`)
+        this.team1Flag = this.querySelector(`[data-ref="team1-flag"]`);
+        this.team2Flag = this.querySelector(`[data-ref="team2-flag"]`);
         this.store = Store.getInstance();
     }
 
@@ -64,6 +97,8 @@ export class UpcomingGameDisplay extends HTMLElement {
         this.game = game;
         this.team1Label.innerText = game.team1;
         this.team2Label.innerText = game.team2;
+        this.team1Flag.className = `flag-icon flag-icon-${flags[game.team1]}`;
+        this.team2Flag.className = `flag-icon flag-icon-${flags[game.team2]}`;
         this.oddsForm.style.visibility = game.odds ? "visible" : "hidden";
         if (game.odds) {
             this.team1Odds.setAttribute(DisplayAttribute, `${game.odds.team1}`);
