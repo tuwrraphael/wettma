@@ -97,14 +97,16 @@ export class UpcomingGameDisplay extends HTMLElement {
         this.game = game;
         this.team1Label.innerText = game.team1;
         this.team2Label.innerText = game.team2;
+        this.timeDisplay.innerText = i18nFormat.format(game.time);
         this.team1Flag.className = `flag-icon flag-icon-${flags[game.team1]}`;
         this.team2Flag.className = `flag-icon flag-icon-${flags[game.team2]}`;
-        this.oddsForm.style.visibility = game.odds ? "visible" : "hidden";
+        this.team1Odds.style.visibility = game.odds ? "visible" : "hidden";
+        this.drawOdds.style.visibility = game.odds ? "visible" : "hidden";
+        this.team2Odds.style.visibility = game.odds ? "visible" : "hidden";
         if (game.odds) {
             this.team1Odds.setAttribute(DisplayAttribute, `${game.odds.team1}`);
             this.drawOdds.setAttribute(DisplayAttribute, `${game.odds.draw}`);
             this.team2Odds.setAttribute(DisplayAttribute, `${game.odds.team2}`);
-            this.timeDisplay.innerText = i18nFormat.format(game.time);
         }
         this.myBetContainer.style.display = game.myBet && !game.saving ? "flex" : "none";
         if (game.myBet) {

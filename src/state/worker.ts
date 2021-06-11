@@ -79,7 +79,7 @@ async function getGames() {
         let upcomingGames = [...s.upcomingGames];
         for (let o of odds) {
             let game = upcomingGames.find(g => o.gameId == g.id);
-            if (game) {
+            if (game && +game.time > (+new Date() -5 * 60000)) {
                 let idx = upcomingGames.indexOf(game);
                 upcomingGames[idx] = {
                     ...game, odds: {
