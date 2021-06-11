@@ -44,3 +44,9 @@ export enum Choice {
     Team2 = 1,
     Draw = 2
 }
+
+export interface ScoreboardEntry {
+    displayName: string;
+    userId: string;
+    points: number;
+}

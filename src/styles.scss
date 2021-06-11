@@ -85,4 +85,50 @@ a {
     display: flex;
     justify-content: flex-end;
     padding: 0.2em;
+
+    &>a:not(:last-of-type) {
+        padding-right: 1em;
+    }
+}
+
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+
+.status-msg {
+    display: flex;
+    align-items: center;
+
+    &>.material-icons {
+        margin-right: 0.2em;
+    }
+
+    &.saving {
+        &>.material-icons {
+            animation: spin 1s ease-in-out infinite;
+        }
+    }
+
+    &.my-bet {
+        &>.material-icons {
+            color: #97cf65;
+        }
+    }
+
+    &.error {
+        &>.material-icons {
+            color: #ba000d;
+        }
+    }
+
+    &.warning {
+        &>.material-icons {
+            color: #fdd835;
+        }
+    }
 }

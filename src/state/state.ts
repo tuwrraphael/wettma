@@ -1,4 +1,5 @@
 import { AccessToken } from "../AccessToken";
+import { ScoreboardEntry } from "../models/ScoreboardEntry";
 import { UpcomingGame } from "../models/UpcomingGame";
 
 export enum RequestState {
@@ -16,4 +17,6 @@ export interface State {
     displayName: string;
     userId: string;
     register: RequestState;
+    scoreboardRequest: RequestState;
+    scoreboard: ScoreboardEntry[];
 }

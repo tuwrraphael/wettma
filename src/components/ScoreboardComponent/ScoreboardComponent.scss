@@ -1,0 +1,23 @@
+.scoreboard-table {
+    width: 100%;
+    td {
+        padding: 0.2em;
+    }
+    tbody td {
+        padding: 0.3em;
+    }
+    thead td {
+        font-weight: 500;
+    }
+    thead td {
+        border-bottom: 0.1em solid black;
+    }
+    border-collapse: collapse;
+    tbody tr:nth-child(2n) {
+        background-color: lighten(#7cb342, 45);
+    }
+
+    tbody tr:hover {
+        background-color: lighten(#7cb342, 35);
+    }
+}

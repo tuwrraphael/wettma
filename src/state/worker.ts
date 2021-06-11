@@ -3,12 +3,13 @@ import { LoginPageOpened } from "./requests/LoginPageOpened";
 import { CreateBetAction } from "./requests/CreateBetAction";
 import { ActionType } from "./requests/ActionType";
 import { environment } from "../environment";
-import { Game, Odds, Profile } from "../api/models";
+import { Game, Odds, Profile, ScoreboardEntry } from "../api/models";
 import { Initialize } from "./requests/Initialize";
 import { RegisterAction } from "./requests/RegisterAction";
 import { AccessToken } from "../AccessToken";
 import { LogoutAction } from "./requests/LogoutAction";
 import { UpcomingGame } from "../models/UpcomingGame";
+import { UpdateScoreboardAction } from "./requests/UpdateScoreboardAction";
 
 let state: State = {
     upcomingGames: [],
@@ -18,6 +19,8 @@ let state: State = {
     displayName: null,
     userId: null,
     register: RequestState.Unset,
+    scoreboard: [],
+    scoreboardRequest: RequestState.Unset
 };
 
 let _odds: Odds[] = [];
@@ -31,7 +34,8 @@ type Actions = CreateBetAction
     | LoginPageOpened
     | Initialize
     | RegisterAction
-    | LogoutAction;
+    | LogoutAction
+    | UpdateScoreboardAction;
 
 async function syncGames() {
     let headers = new Headers();
@@ -79,7 +83,7 @@ async function getGames() {
         let upcomingGames = [...s.upcomingGames];
         for (let o of odds) {
             let game = upcomingGames.find(g => o.gameId == g.id);
-            if (game && +game.time > (+new Date() -5 * 60000)) {
+            if (game && +game.time > (+new Date() - 5 * 60000)) {
                 let idx = upcomingGames.indexOf(game);
                 upcomingGames[idx] = {
                     ...game, odds: {
@@ -145,7 +149,7 @@ async function createBet(msg: CreateBetAction) {
             });
         } else if (res.status == 400) {
             let err: { type: string } = await res.json();
-            if (err.type == "oddschanged" ||err.type== "oddsexpired") {
+            if (err.type == "oddschanged" || err.type == "oddsexpired") {
                 updateUpcomingGame(foundOdds.gameId, {
                     saving: false, saveError: {
                         oddsChanged: true
@@ -246,6 +250,36 @@ async function logout(smg: LogoutAction) {
     await getGames();
 }
 
+async function updateScoreboard(msg: UpdateScoreboardAction) {
+    updateState(s => { return { ...s, scoreboardRequest: RequestState.InProgress } });
+    try {
+        let res = await fetch(`${environment.serverUrl}/scoreboard`);
+        if (!res.ok) {
+            updateState(s => { return { ...s, scoreboardRequest: RequestState.Failed } });
+            return;
+        }
+        let content: ScoreboardEntry[] = await res.json();
+        let scoreboard = content.sort((a, b) => {
+            return b.points - a.points || a.displayName.localeCompare(b.displayName);
+        }).map(s => {
+            return {
+                displayName: s.displayName,
+                points: s.points,
+                userId: s.userId
+            };
+        })
+        updateState(s => {
+            return {
+                ...s,
+                scoreboardRequest: RequestState.Successful,
+                scoreboard: scoreboard
+            }
+        });
+    } catch (err) {
+        updateState(s => { return { ...s, scoreboardRequest: RequestState.Failed } });
+    }
+}
+
 async function handleMessage(msg: Actions) {
     switch (msg.type) {
         case ActionType.CreateBet:
@@ -262,6 +296,10 @@ async function handleMessage(msg: Actions) {
             break;
         case ActionType.Logout:
             await logout(msg);
+            break;
+        case ActionType.UpdateScoreboard:
+            await updateScoreboard(msg);
+            break;
     }
 }
 

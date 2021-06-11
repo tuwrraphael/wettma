@@ -34,10 +34,14 @@ export class HomeComponent extends HTMLElement {
         this.abortController = new AbortController();
         this.store.subscribe(s => this.updateState(s), this.abortController.signal);
         this.updateState(this.store.state);
-        abortableEventListener(this.querySelector("#explanation-link"), "click", e => {
-            e.preventDefault();
-            this.router.router.navigate("explanation", "Anleitung - wettma");
-        }, this.abortController.signal);
+        for (let link of this.querySelectorAll("nav > a")) {
+            abortableEventListener(link, "click", e => {
+                e.preventDefault();
+                this.router.router.navigate(link.getAttribute("href"), link.getAttribute("title"));
+            }, this.abortController.signal);
+        }
+
+
     }
 
     updateState(s: State) {

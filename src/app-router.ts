@@ -4,6 +4,7 @@ import { ExplanationComponent } from "./components/ExplanationComponent/Explanat
 import { HomeComponent } from "./components/HomeComponent/HomeComponent";
 import { LoginComponent } from "./components/LoginComponent/LoginComponent";
 import { RegisterComponent } from "./components/RegisterComponent/RegisterComponent";
+import { ScoreboardComponent } from "./components/ScoreboardComponent/ScoreboardComponent";
 
 export class AppRouter {
     activeRoute: string;
@@ -30,6 +31,9 @@ export class AppRouter {
                     case "explanation":
                         self.activeRoute = "explanation";
                         return new ExplanationComponent();
+                    case "scoreboard":
+                        self.activeRoute = "scoreboard";
+                        return new ScoreboardComponent();
                     default:
                         self.activeRoute = "home";
                         let c = new HomeComponent();

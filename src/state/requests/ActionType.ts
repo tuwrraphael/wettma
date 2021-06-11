@@ -4,5 +4,6 @@ export const enum ActionType {
     LoginPageOpened,
     Initialize,
     Register,
-    Logout
+    Logout,
+    UpdateScoreboard
 }
