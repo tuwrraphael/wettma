@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Wettma.RequestModels;
 using Wettma.Services;
 
 namespace Wettma.Controllers
@@ -31,6 +32,14 @@ namespace Wettma.Controllers
                 await this.StreamArray(writer, streamWriter, _gamesService.GetGames(this.GetUserId()));
                 await writer.FlushAsync();
             }
+        }
+
+        [Authorize("GameAdmin")]
+        [HttpPut("{id}/result")]
+        public async Task<IActionResult> Put(int id, [FromBody] SetResultRequest request)
+        {
+            await _gamesService.SetGameResult(id, request.Team1Goals, request.Team2Goals);
+            return Ok();
         }
     }
 }

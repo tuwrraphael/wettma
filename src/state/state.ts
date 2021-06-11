@@ -1,6 +1,6 @@
 import { AccessToken } from "../AccessToken";
 import { ScoreboardEntry } from "../models/ScoreboardEntry";
-import { UpcomingGame } from "../models/UpcomingGame";
+import { FinishedGame, UpcomingGame } from "../models/UpcomingGame";
 
 export enum RequestState {
     Unset,
@@ -12,6 +12,7 @@ export enum RequestState {
 export interface State {
     goToLogin: boolean;
     upcomingGames: UpcomingGame[];
+    finishedGames : FinishedGame[];
     accessToken: AccessToken;
     goToRegister: boolean;
     displayName: string;
@@ -19,4 +20,5 @@ export interface State {
     register: RequestState;
     scoreboardRequest: RequestState;
     scoreboard: ScoreboardEntry[];
+    setResultRequest: RequestState
 }

@@ -1,0 +1,37 @@
+.finished-game {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 0px 0px;
+    grid-auto-flow: row;
+    justify-items: center;
+    grid-template-areas:
+      "team1 time team2"
+      "goals1 . goals2";
+    margin-bottom: 0.6em;
+
+    &>h3 {
+        margin: 0;
+        padding: 0;
+    }
+}
+
+.time { grid-area: time; margin-bottom: 0.2em; }
+
+.team1 { grid-area: team1; }
+
+.team2 { grid-area: team2; }
+
+.goals1 { grid-area: goals1; }
+
+.goals2 { grid-area: goals2; }
+
+finished-game-display {
+    border-radius: 3px;
+    box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%),
+    0 2px 2px 0 rgb(0 0 0 / 14%),
+    0 1px 5px 0 rgb(0 0 0 / 12%);
+    display: block;
+    padding: 0.5em;
+    margin-bottom: 0.5em;
+}

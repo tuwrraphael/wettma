@@ -10,6 +10,7 @@ import { AccessToken } from "../AccessToken";
 import { LogoutAction } from "./requests/LogoutAction";
 import { UpcomingGame } from "../models/UpcomingGame";
 import { UpdateScoreboardAction } from "./requests/UpdateScoreboardAction";
+import { SetResultAction } from "./requests/SetResultAction";
 
 let state: State = {
     upcomingGames: [],
@@ -20,7 +21,9 @@ let state: State = {
     userId: null,
     register: RequestState.Unset,
     scoreboard: [],
-    scoreboardRequest: RequestState.Unset
+    scoreboardRequest: RequestState.Unset,
+    setResultRequest: RequestState.Unset,
+    finishedGames: []
 };
 
 let _odds: Odds[] = [];
@@ -35,7 +38,8 @@ type Actions = CreateBetAction
     | Initialize
     | RegisterAction
     | LogoutAction
-    | UpdateScoreboardAction;
+    | UpdateScoreboardAction
+    | SetResultAction;
 
 async function syncGames() {
     let headers = new Headers();
@@ -64,7 +68,27 @@ async function syncGames() {
                         }
                     } : null
                 };
-            }).sort((a, b) => +a.time - +b.time)
+            }).sort((a, b) => +a.time - +b.time),
+            finishedGames: games.filter(g => g.result).map(g => {
+                return {
+                    id: g.id,
+                    team1: g.team1,
+                    team2: g.team2,
+                    time: new Date(g.time),
+                    myBet: g.myBet ? {
+                        choice: g.myBet.choice,
+                        odds: {
+                            team1: g.myBet.odds.team1Odds,
+                            team2: g.myBet.odds.team2Odds,
+                            draw: g.myBet.odds.drawOdds
+                        }
+                    } : null,
+                    result: {
+                        team1Goals: g.result.team1Goals,
+                        team2Goals: g.result.team2Goals
+                    }
+                }
+            }).sort((a, b) => +b.time - +a.time)
         }
     });
 }
@@ -280,6 +304,27 @@ async function updateScoreboard(msg: UpdateScoreboardAction) {
     }
 }
 
+async function setResult(msg: SetResultAction) {
+    updateState(s => { return { ...s, setResultRequest: RequestState.InProgress } });
+    try {
+        let res = await fetch(`${environment.serverUrl}/games/${msg.gameId}/result`, {
+            headers: {
+                "Authorization": `Bearer ${state.accessToken.token}`,
+                "Content-Type": "application/json"
+            },
+            method: "PUT",
+            body: JSON.stringify({ team1Goals: msg.team1Goals, team2Goals: msg.team2Goals })
+        });
+        if (res.ok) {
+            updateState(s => { return { ...s, setResultRequest: RequestState.Successful } });
+        } else {
+            updateState(s => { return { ...s, setResultRequest: RequestState.Failed } });
+        }
+    } catch (err) {
+        updateState(s => { return { ...s, setResultRequest: RequestState.Failed } });
+    }
+}
+
 async function handleMessage(msg: Actions) {
     switch (msg.type) {
         case ActionType.CreateBet:
@@ -299,6 +344,9 @@ async function handleMessage(msg: Actions) {
             break;
         case ActionType.UpdateScoreboard:
             await updateScoreboard(msg);
+            break;
+        case ActionType.SetResult:
+            await setResult(msg);
             break;
     }
 }

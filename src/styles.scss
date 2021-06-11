@@ -114,7 +114,7 @@ a {
         }
     }
 
-    &.my-bet {
+    &.my-bet, &.correct-bet {
         &>.material-icons {
             color: #97cf65;
         }

@@ -5,5 +5,6 @@ export const enum ActionType {
     Initialize,
     Register,
     Logout,
-    UpdateScoreboard
+    UpdateScoreboard,
+    SetResult
 }

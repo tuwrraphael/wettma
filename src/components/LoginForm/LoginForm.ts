@@ -23,7 +23,7 @@ export class LoginForm extends HTMLElement {
     connectedCallback() {
         this.nonceInput = this.querySelector("#nonce");
         this.redirectUriInput = this.querySelector("#redirect_uri");
-        this.redirectUriInput.value = window.location.href.replace(/\/(login|explanation|scoreboard)|(\?.+)|(\#.+)/g, "").replace(/(\/$)/g, "");
+        this.redirectUriInput.value = window.location.href.replace(/\/(login|explanation|scoreboard|setresult)|(\?.+)|(\#.+)/g, "").replace(/(\/$)/g, "");
         this.loginHintInput = this.querySelector("#login_hint");
         this.loginForm = this.querySelector("#login_form");
         this.nonceInput.value = nonce(8);

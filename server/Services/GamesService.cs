@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Wettma.Services
 {
@@ -12,6 +13,23 @@ namespace Wettma.Services
         public GamesService(WettmaContext wettmaContext)
         {
             _wettmaContext = wettmaContext;
+        }
+
+        public async Task SetGameResult(int gameId, int team1Goals, int team2Goals)
+        {
+            var result = _wettmaContext.Results.Where(r => r.GameId == gameId).SingleOrDefault();
+            if (null == result)
+            {
+                result = new DbModels.GameResult()
+                {
+                    GameId = gameId,
+                };
+                await _wettmaContext.Results.AddAsync(result);
+            }
+            result.Team1Goals = team1Goals;
+            result.Team2Goals = team2Goals;
+            await _wettmaContext.SaveChangesAsync();
+
         }
 
         public async IAsyncEnumerable<Models.Game> GetGames(UserId userId = null)

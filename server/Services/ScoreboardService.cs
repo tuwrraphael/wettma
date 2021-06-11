@@ -17,7 +17,7 @@ namespace Wettma.Services
         {
             await foreach (var user in _wettmaContext.Users.AsAsyncEnumerable())
             {
-                var bets = _wettmaContext.Bets.Where(b => b.UserId == user.Id && null != b.Odds.Game.Result).Include(b => b.Odds).ThenInclude(b => b.Game).ToArray();
+                var bets = _wettmaContext.Bets.Where(b => b.UserId == user.Id && null != b.Odds.Game.Result).Include(b => b.Odds).ThenInclude(b => b.Game).ThenInclude(g => g.Result).ToArray();
                 var groupedBets = bets.GroupBy(b => b.Odds.GameId);
                 var lastCalls = groupedBets.Select(grouping => grouping.Where(g => g.TimePlaced == grouping.Max(g => g.TimePlaced)).Single());
                 double score = 0;

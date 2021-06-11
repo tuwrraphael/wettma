@@ -89,6 +89,11 @@ namespace Wettma
                 .AllowCredentials()
                 .WithOrigins("http://localhost:9000", "https://wettma.kesal.at", "https://tuwrraphael.github.io"));
             });
+
+            services.AddAuthorization(p =>
+            {
+                p.AddPolicy("GameAdmin", p => p.RequireUserName(Configuration["GameAdmin"]));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
