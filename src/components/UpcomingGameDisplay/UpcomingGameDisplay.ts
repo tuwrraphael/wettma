@@ -104,9 +104,9 @@ export class UpcomingGameDisplay extends HTMLElement {
         this.drawOdds.style.visibility = game.odds ? "visible" : "hidden";
         this.team2Odds.style.visibility = game.odds ? "visible" : "hidden";
         if (game.odds) {
-            this.team1Odds.setAttribute(DisplayAttribute, `${game.odds.team1}`);
-            this.drawOdds.setAttribute(DisplayAttribute, `${game.odds.draw}`);
-            this.team2Odds.setAttribute(DisplayAttribute, `${game.odds.team2}`);
+            this.team1Odds.setAttribute(DisplayAttribute, `${game.odds.team1.toFixed(2)}`);
+            this.drawOdds.setAttribute(DisplayAttribute, `${game.odds.draw.toFixed(2)}`);
+            this.team2Odds.setAttribute(DisplayAttribute, `${game.odds.team2.toFixed(2)}`);
         }
         this.myBetContainer.style.display = game.myBet && !game.saving ? "flex" : "none";
         if (game.myBet) {

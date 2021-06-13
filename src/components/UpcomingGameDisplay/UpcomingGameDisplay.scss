@@ -12,8 +12,16 @@
     margin-bottom: 0.6em;
 
     &>h3 {
+
+        & > .flag-icon {
+            padding: 0 0.2em;
+        }
         margin: 0;
         padding: 0;
+        display: inline-flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
     }
 }
 

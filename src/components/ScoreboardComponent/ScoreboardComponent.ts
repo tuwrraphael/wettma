@@ -44,7 +44,7 @@ export class ScoreboardComponent extends HTMLElement {
                 let nameCol: HTMLTableCellElement = <HTMLTableCellElement>e.children[0];
                 nameCol.innerText = d.displayName;
                 let pointsCol: HTMLTableCellElement = <HTMLTableCellElement>e.children[1];
-                pointsCol.innerText = `${d.points}`;
+                pointsCol.innerText = `${d.points.toFixed(2)}`;
             });
             this.scoreboardLoadError.style.display = s.scoreboardRequest == RequestState.Failed ? "flex" : "none";
         }, this.abortController.signal);

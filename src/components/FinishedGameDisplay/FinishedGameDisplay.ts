@@ -87,9 +87,9 @@ export class FinishedGameDisplay extends HTMLElement {
         this.goals2.innerText = game.result.team2Goals + "";
 
         let correct = this.game.myBet &&
-            (this.game.myBet.choice == Choice.Team1 && this.game.result.team1Goals > this.game.result.team2Goals) ||
+            ((this.game.myBet.choice == Choice.Team1 && this.game.result.team1Goals > this.game.result.team2Goals) ||
             (this.game.myBet.choice == Choice.Team2 && this.game.result.team1Goals < this.game.result.team2Goals) ||
-            (this.game.myBet.choice == Choice.Draw && this.game.result.team1Goals == this.game.result.team2Goals);
+            (this.game.myBet.choice == Choice.Draw && this.game.result.team1Goals == this.game.result.team2Goals));
         let wrong = this.game.myBet && !correct;
 
         this.correctBet.style.display = correct ? "flex" : "none";

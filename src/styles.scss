@@ -87,7 +87,7 @@ a {
     padding: 0.2em;
 
     &>a:not(:last-of-type) {
-        padding-right: 1em;
+        padding-right: 0.5em;
     }
 }
 
@@ -114,7 +114,8 @@ a {
         }
     }
 
-    &.my-bet, &.correct-bet {
+    &.my-bet,
+    &.correct-bet {
         &>.material-icons {
             color: #97cf65;
         }
