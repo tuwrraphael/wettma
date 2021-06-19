@@ -3,7 +3,7 @@ import { LoginPageOpened } from "./requests/LoginPageOpened";
 import { CreateBetAction } from "./requests/CreateBetAction";
 import { ActionType } from "./requests/ActionType";
 import { environment } from "../environment";
-import { Game, Odds, Profile, ScoreboardEntry } from "../api/models";
+import { Game, Odds, Profile, ScoreboardEntry, UserBet } from "../api/models";
 import { Initialize } from "./requests/Initialize";
 import { RegisterAction } from "./requests/RegisterAction";
 import { AccessToken } from "../AccessToken";
@@ -11,6 +11,7 @@ import { LogoutAction } from "./requests/LogoutAction";
 import { UpcomingGame } from "../models/UpcomingGame";
 import { UpdateScoreboardAction } from "./requests/UpdateScoreboardAction";
 import { SetResultAction } from "./requests/SetResultAction";
+import { ShowGameBets } from "./requests/ShowGameBets";
 
 let state: State = {
     upcomingGames: [],
@@ -23,7 +24,8 @@ let state: State = {
     scoreboard: [],
     scoreboardRequest: RequestState.Unset,
     setResultRequest: RequestState.Unset,
-    finishedGames: []
+    finishedGames: [],
+    gameBets: {}
 };
 
 let _odds: Odds[] = [];
@@ -39,7 +41,8 @@ type Actions = CreateBetAction
     | RegisterAction
     | LogoutAction
     | UpdateScoreboardAction
-    | SetResultAction;
+    | SetResultAction
+    | ShowGameBets;
 
 async function syncGames() {
     let headers = new Headers();
@@ -70,7 +73,9 @@ async function syncGames() {
                 };
             }).sort((a, b) => +a.time - +b.time),
             finishedGames: games.filter(g => g.result).map(g => {
+                let oldGame = s.finishedGames.find(o => o.id == g.id);
                 return {
+                    ...oldGame,
                     id: g.id,
                     team1: g.team1,
                     team2: g.team2,
@@ -304,6 +309,37 @@ async function updateScoreboard(msg: UpdateScoreboardAction) {
     }
 }
 
+async function getGameBets(msg: ShowGameBets) {
+    updateState(s => { return { ...s, gameBets: { ...s.gameBets, [msg.gameId]: { ...s.gameBets[msg.gameId], requestState: RequestState.InProgress } } } });
+    try {
+        let res = await fetch(`${environment.serverUrl}/games/${msg.gameId}/bets`);
+        if (!res.ok) {
+            updateState(s => { return { ...s, gameBets: { ...s.gameBets, [msg.gameId]: { ...s.gameBets[msg.gameId], requestState: RequestState.Failed } } } });
+            return;
+        }
+        let content: UserBet[] = await res.json();
+        updateState(s => {
+            return {
+                ...s, gameBets: {
+                    ...s.gameBets, [msg.gameId]: {
+                        ...s.gameBets[msg.gameId],
+                        requestState: RequestState.Successful,
+                        bets: content.map(b => {
+                            return {
+                                displayName: b.displayName,
+                                choice: b.choice,
+                                userId: b.userId
+                            };
+                        })
+                    }
+                }
+            }
+        });
+    } catch (err) {
+        updateState(s => { return { ...s, gameBets: { ...s.gameBets, [msg.gameId]: { ...s.gameBets[msg.gameId], requestState: RequestState.Failed } } } });
+    }
+}
+
 async function setResult(msg: SetResultAction) {
     updateState(s => { return { ...s, setResultRequest: RequestState.InProgress } });
     try {
@@ -347,6 +383,9 @@ async function handleMessage(msg: Actions) {
             break;
         case ActionType.SetResult:
             await setResult(msg);
+            break;
+        case ActionType.ShowGameBets:
+            await getGameBets(msg);
             break;
     }
 }

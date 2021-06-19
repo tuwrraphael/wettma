@@ -1,18 +1,20 @@
 import { AccessToken } from "../AccessToken";
 import { ScoreboardEntry } from "../models/ScoreboardEntry";
-import { FinishedGame, UpcomingGame } from "../models/UpcomingGame";
+import { UpcomingGame } from "../models/UpcomingGame";
+import { FinishedGame } from "../models/FinishedGame";
+import { GameBets } from "../models/GameBets";
 
 export enum RequestState {
     Unset,
     InProgress,
     Successful,
-    Failed,
+    Failed
 }
 
 export interface State {
     goToLogin: boolean;
     upcomingGames: UpcomingGame[];
-    finishedGames : FinishedGame[];
+    finishedGames: FinishedGame[];
     accessToken: AccessToken;
     goToRegister: boolean;
     displayName: string;
@@ -20,5 +22,6 @@ export interface State {
     register: RequestState;
     scoreboardRequest: RequestState;
     scoreboard: ScoreboardEntry[];
-    setResultRequest: RequestState
+    setResultRequest: RequestState;
+    gameBets: { [gameId: number]: GameBets }
 }

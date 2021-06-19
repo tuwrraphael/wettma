@@ -7,6 +7,7 @@ namespace Wettma.Services
     public interface IGamesService
     {
         IAsyncEnumerable<Game> GetGames(UserId userId = null);
+        Task<UserBet[]> GetUserBets(int gameId);
         Task SetGameResult(int gameId, int team1Goals, int team2Goals);
     }
 }

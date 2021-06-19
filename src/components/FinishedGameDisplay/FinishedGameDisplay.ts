@@ -1,4 +1,5 @@
-import { FinishedGame, UpcomingGame } from "../../models/UpcomingGame";
+import { UpcomingGame } from "../../models/UpcomingGame";
+import { FinishedGame } from "../../models/FinishedGame";
 import template from "./FinishedGameDisplay.html";
 import "./FinishedGameDisplay.scss";
 import "../OddsButton/OddsButton";

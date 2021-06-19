@@ -34,6 +34,17 @@ namespace Wettma.Controllers
             }
         }
 
+        [HttpGet("{id}/bets")]
+        public async Task<IActionResult> UserBets(int id)
+        {
+            var res = await _gamesService.GetUserBets(id);
+            if (null != res)
+            {
+                return Ok(res);
+            }
+            return NotFound();
+        }
+
         [Authorize("GameAdmin")]
         [HttpPut("{id}/result")]
         public async Task<IActionResult> Put(int id, [FromBody] SetResultRequest request)

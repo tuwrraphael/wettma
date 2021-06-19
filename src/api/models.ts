@@ -30,6 +30,12 @@ export interface MyBet {
     choice: Choice;
 }
 
+export interface UserBet {
+    choice: Choice;
+    userId: string;
+    displayName: string;
+}
+
 export interface Bet {
     id: number;
     userId: string;

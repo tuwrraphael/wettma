@@ -1,7 +1,8 @@
 import { abortableEventListener } from "../../abortable-event-listener";
 import { AppRouter } from "../../app-router";
 import { ArrayToElementRenderer } from "../../ArrayToElementRenderer";
-import { FinishedGame, UpcomingGame } from "../../models/UpcomingGame";
+import { UpcomingGame } from "../../models/UpcomingGame";
+import { FinishedGame } from "../../models/FinishedGame";
 import { State } from "../../state/state";
 import { Store } from "../../state/store";
 import { UpcomingGameDisplay } from "../UpcomingGameDisplay/UpcomingGameDisplay";

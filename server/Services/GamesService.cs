@@ -32,6 +32,23 @@ namespace Wettma.Services
 
         }
 
+        public async Task<Models.UserBet[]> GetUserBets(int gameId)
+        {
+            var bettingEndTime = DateTimeOffset.Now.AddMinutes(-5).UtcDateTime;
+            if (!await _wettmaContext.Games.Where(g => g.Id == gameId && g.Time <= bettingEndTime).AnyAsync())
+            {
+                return null;
+            }
+            var betsByUser = (await _wettmaContext.Bets.Where(b => b.Odds.GameId == gameId).Include(b => b.User).ToArrayAsync()).GroupBy(b => b.UserId);
+            return betsByUser.Select(b => { return new { User = b.First().User, Bet = b.Where(g => g.TimePlaced == b.Max(d => d.TimePlaced)).Single() }; })
+                .Select(b => new Models.UserBet()
+                {
+                    Choice = b.Bet.Choice,
+                    DisplayName = b.User.DisplayName,
+                    UserId = b.User.Id
+                }).ToArray();
+        }
+
         public async IAsyncEnumerable<Models.Game> GetGames(UserId userId = null)
         {
             await foreach (var game in _wettmaContext.Games
@@ -45,7 +62,7 @@ namespace Wettma.Services
                     {
                         Team1Goals = g.Result.Team1Goals,
                         Team2Goals = g.Result.Team2Goals
-                    },
+                    }
                 })
                 .AsAsyncEnumerable())
             {

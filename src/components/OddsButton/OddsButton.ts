@@ -1,4 +1,5 @@
 import { abortableEventListener } from "../../abortable-event-listener";
+import { Choice } from "../../api/models";
 import template from "./OddsButton.html";
 import "./OddsButton.scss";
 

@@ -9,13 +9,13 @@ namespace Wettma.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class OddsController : ControllerBase
+    public class ScoreboardController : ControllerBase
     {
-        private readonly IOddsService _oddsService;
+        private readonly IScoreboardService _scoreboardService;
 
-        public OddsController(IOddsService oddsService)
+        public ScoreboardController(IScoreboardService scoreboardService)
         {
-            _oddsService = oddsService;
+            _scoreboardService = scoreboardService;
         }
 
 
@@ -31,7 +31,7 @@ namespace Wettma.Controllers
             await using ((writer = new Utf8JsonWriter(Response.Body)).ConfigureAwait(false))
             await using ((streamWriter = new StreamWriter(Response.Body)).ConfigureAwait(false))
             {
-                await this.StreamArray(writer, streamWriter, _oddsService.GetOdds());
+                await this.StreamArray(writer, streamWriter, _scoreboardService.GetEntries());
                 await writer.FlushAsync();
             }
         }

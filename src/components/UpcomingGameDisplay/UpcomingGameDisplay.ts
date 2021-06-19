@@ -7,6 +7,8 @@ import { abortableEventListener } from "../../abortable-event-listener";
 import { Store } from "../../state/store";
 import { CreateBetAction } from "../../state/requests/CreateBetAction";
 import { Choice } from "../../api/models";
+import "../BetsDisplay/BetsDisplay";
+import { BetsDisplay } from "../BetsDisplay/BetsDisplay";
 
 let i18nFormat = new Intl.DateTimeFormat(["de-AT"], { weekday: "short", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
 
@@ -59,6 +61,7 @@ export class UpcomingGameDisplay extends HTMLElement {
     private unknownError: HTMLDivElement;
     private team2Flag: HTMLSpanElement;
     private team1Flag: HTMLSpanElement;
+    private betsDisplay: BetsDisplay;
 
     constructor() {
         super();
@@ -118,6 +121,18 @@ export class UpcomingGameDisplay extends HTMLElement {
         this.oddsChangedError.style.display = game.saveError?.oddsChanged ? "flex" : "none";
         this.gameStartedError.style.display = game.saveError?.gameStarted ? "flex" : "none";
         this.unknownError.style.display = game.saveError?.unknown ? "flex" : "none";
+        if (+game.time < +new Date()) {
+            if (!this.betsDisplay) {
+                this.betsDisplay = new BetsDisplay();
+                this.appendChild(this.betsDisplay);
+            }
+        } else if (this.betsDisplay) {
+            this.removeChild(this.betsDisplay);
+            this.betsDisplay = null;
+        }
+        if (this.betsDisplay) {
+            this.betsDisplay.setGame(game);
+        }
     }
 }
 
