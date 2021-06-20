@@ -1,5 +1,5 @@
 import { UpcomingGame } from "../../models/UpcomingGame";
-import template from "./UpcomingGameDisplay.html";
+import templateContent from "./UpcomingGameDisplay.html";
 import "./UpcomingGameDisplay.scss";
 import "../OddsButton/OddsButton";
 import { DisplayAttribute, OddsButton } from "../OddsButton/OddsButton";
@@ -9,37 +9,15 @@ import { CreateBetAction } from "../../state/requests/CreateBetAction";
 import { Choice } from "../../api/models";
 import "../BetsDisplay/BetsDisplay";
 import { BetsDisplay } from "../BetsDisplay/BetsDisplay";
+import { CountryAbbreviation } from "../../CountryAbbreviation";
+import { ReuseableTemplate } from "../../ReuseableTemplate";
 
 let i18nFormat = new Intl.DateTimeFormat(["de-AT"], { weekday: "short", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
 
 import("./flags");
 
-let flags: { [s: string]: string } = {
-    "Türkei": "tr",
-    "Italien": "it",
-    "Wales": "gb-wls",
-    "Schweiz": "ch",
-    "Schweden": "se",
-    "Finnland": "fi",
-    "Deutschland": "de",
-    "England": "gb-eng",
-    "Dänemark": "dk",
-    "Russland": "ru",
-    "Österreich": "at",
-    "Belgien": "be",
-    "Kroatien": "hr",
-    "Nordmazedonien": "mk",
-    "Niederlande": "nl",
-    "Ukraine": "ua",
-    "Spanien": "es",
-    "Schottland": "gb-sct",
-    "Tschechien": "cz",
-    "Polen": "pl",
-    "Slowakei": "sk",
-    "Portugal": "pt",
-    "Ungarn": "hu",
-    "Frankreich": "fr"
-};
+const template = new ReuseableTemplate(templateContent);
+
 
 export class UpcomingGameDisplay extends HTMLElement {
     private team1Label: HTMLSpanElement;
@@ -65,7 +43,7 @@ export class UpcomingGameDisplay extends HTMLElement {
 
     constructor() {
         super();
-        this.innerHTML = template;
+        this.appendChild(template.get());
         this.team1Label = this.querySelector(`[data-ref="team1"]`);
         this.team2Label = this.querySelector(`[data-ref="team2"]`);
         this.team1Odds = this.querySelector(`[data-ref="team1-odds"]`);
@@ -101,8 +79,8 @@ export class UpcomingGameDisplay extends HTMLElement {
         this.team1Label.innerText = game.team1;
         this.team2Label.innerText = game.team2;
         this.timeDisplay.innerText = i18nFormat.format(game.time);
-        this.team1Flag.className = `flag-icon flag-icon-${flags[game.team1]}`;
-        this.team2Flag.className = `flag-icon flag-icon-${flags[game.team2]}`;
+        this.team1Flag.className = `flag-icon flag-icon-${CountryAbbreviation[game.team1]}`;
+        this.team2Flag.className = `flag-icon flag-icon-${CountryAbbreviation[game.team2]}`;
         this.team1Odds.style.visibility = game.odds ? "visible" : "hidden";
         this.drawOdds.style.visibility = game.odds ? "visible" : "hidden";
         this.team2Odds.style.visibility = game.odds ? "visible" : "hidden";

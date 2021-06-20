@@ -34,7 +34,7 @@ namespace Wettma.Services
 
         public async Task<Models.UserBet[]> GetUserBets(int gameId)
         {
-            var bettingEndTime = DateTimeOffset.Now.AddMinutes(-5).UtcDateTime;
+            var bettingEndTime = DateTimeOffset.Now.AddMinutes(5).UtcDateTime;
             if (!await _wettmaContext.Games.Where(g => g.Id == gameId && g.Time <= bettingEndTime).AnyAsync())
             {
                 return null;

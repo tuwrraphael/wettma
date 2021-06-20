@@ -16,3 +16,14 @@
         text-decoration: underline;
     }
 }
+
+.bets-table {
+    tr>td:not(:first-of-type) {
+        text-align: center;
+        width: 3em;
+    }
+    .material-icons {
+        margin-top: 4px;
+        font-size: 16px;
+    }
+}

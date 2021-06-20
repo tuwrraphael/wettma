@@ -1,11 +1,8 @@
 import { ContainerRouteRenderer, Router } from "route-it";
 import { AsyncRouteResolver } from "route-it/dist/router";
-import { ExplanationComponent } from "./components/ExplanationComponent/ExplanationComponent";
 import { HomeComponent } from "./components/HomeComponent/HomeComponent";
 import { LoginComponent } from "./components/LoginComponent/LoginComponent";
 import { RegisterComponent } from "./components/RegisterComponent/RegisterComponent";
-import { ScoreboardComponent } from "./components/ScoreboardComponent/ScoreboardComponent";
-import { SetResultComponent } from "./components/SetResultComponent/SetResultComponent";
 
 export class AppRouter {
     activeRoute: string;
@@ -31,12 +28,15 @@ export class AppRouter {
                         return new RegisterComponent();
                     case "explanation":
                         self.activeRoute = "explanation";
+                        let { ExplanationComponent } = await import("./components/ExplanationComponent/ExplanationComponent");
                         return new ExplanationComponent();
                     case "scoreboard":
                         self.activeRoute = "scoreboard";
+                        let { ScoreboardComponent } = await import("./components/ScoreboardComponent/ScoreboardComponent");
                         return new ScoreboardComponent();
                     case "setresult":
                         self.activeRoute = "setresult";
+                        let { SetResultComponent } = await import("./components/SetResultComponent/SetResultComponent");
                         return new SetResultComponent();
                     default:
                         self.activeRoute = "home";

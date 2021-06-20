@@ -13,7 +13,7 @@ let cacheNames = {
 
 self.addEventListener("install", function (event) {
     let dividedAssets = self.__WB_MANIFEST.reduce((acc, next) => {
-        if (next.url.indexOf("favicons/") > -1) {
+        if (next.url.indexOf("favicons/") > -1 || next.url.indexOf(".svg") > -1) {
             acc.asset.push(next.url);
         }
         else {
