@@ -49,6 +49,7 @@ async function syncGames() {
     if (state.accessToken) {
         headers.append("Authorization", `Bearer ${state.accessToken.token}`);
     }
+    headers.append("X-Frontend-Version", "1");
     let gamesRes = await fetch(`${environment.serverUrl}/games`, { headers: headers });
     let games: Game[] = await gamesRes.json();
     updateState(s => {
