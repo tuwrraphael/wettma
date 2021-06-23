@@ -1,0 +1,27 @@
+points-display {
+    width: 2em;
+    height: 2em;
+    background-image: url(./bg.svg);
+
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-top-right-radius: 3px;
+    text-align: right;
+
+    &>div {
+        width: 1em;
+        height: 1em;
+        display: flex;
+        position: absolute;
+        right: 0;
+        justify-content: center;
+        align-items: flex-end;
+
+        &>span {
+            color: white;
+            font-size: 0.75em;
+            font-weight: 600;
+        }
+    }
+}

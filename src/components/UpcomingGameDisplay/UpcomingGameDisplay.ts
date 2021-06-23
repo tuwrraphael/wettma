@@ -11,6 +11,8 @@ import "../BetsDisplay/BetsDisplay";
 import { BetsDisplay } from "../BetsDisplay/BetsDisplay";
 import { CountryAbbreviation } from "../../CountryAbbreviation";
 import { ReuseableTemplate } from "../../ReuseableTemplate";
+import "../PointsDisplay/PointsDisplay";
+import { PointsAttribute, PointsDisplay } from "../PointsDisplay/PointsDisplay";
 
 let i18nFormat = new Intl.DateTimeFormat(["de-AT"], { weekday: "short", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
 
@@ -40,6 +42,7 @@ export class UpcomingGameDisplay extends HTMLElement {
     private team2Flag: HTMLSpanElement;
     private team1Flag: HTMLSpanElement;
     private betsDisplay: BetsDisplay;
+    private pointsDisplay: PointsDisplay;
 
     constructor() {
         super();
@@ -60,6 +63,7 @@ export class UpcomingGameDisplay extends HTMLElement {
         this.unknownError = this.querySelector(`[data-ref="save-error"]`)
         this.team1Flag = this.querySelector(`[data-ref="team1-flag"]`);
         this.team2Flag = this.querySelector(`[data-ref="team2-flag"]`);
+        this.pointsDisplay = this.querySelector("points-display");
         this.store = Store.getInstance();
     }
 
@@ -126,6 +130,7 @@ export class UpcomingGameDisplay extends HTMLElement {
         if (this.betsDisplay) {
             this.betsDisplay.setGame(game);
         }
+        this.pointsDisplay.setAttribute(PointsAttribute, `${game.points || 0}`);
     }
 }
 

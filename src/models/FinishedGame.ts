@@ -18,4 +18,5 @@ export interface FinishedGame {
         team1Goals: number;
         team2Goals: number;
     };
+    points: number;
 }

@@ -76,7 +76,8 @@ async function syncGames() {
                             team2: g.myBet.odds.team2Odds,
                             draw: g.myBet.odds.drawOdds
                         }
-                    } : null
+                    } : null,
+                    points: g.points
                 };
             }).sort((a, b) => +a.time - +b.time),
             finishedGames: games.filter(g => g.result).map(g => {
@@ -98,7 +99,8 @@ async function syncGames() {
                     result: {
                         team1Goals: g.result.team1Goals,
                         team2Goals: g.result.team2Goals
-                    }
+                    },
+                    points: g.points
                 }
             }).sort((a, b) => +b.time - +a.time)
         }

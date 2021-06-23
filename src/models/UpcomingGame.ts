@@ -24,5 +24,6 @@ export interface UpcomingGame {
         oddsChanged?: boolean,
         gameStarted?: boolean,
         unknown?: boolean
-    }
+    },
+    points: number
 }

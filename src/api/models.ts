@@ -23,6 +23,7 @@ export interface Game {
     time: string;
     result: GameResult;
     myBet: MyBet;
+    points: number;
 }
 
 export interface MyBet {

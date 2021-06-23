@@ -1,10 +1,13 @@
 import { abortableEventListener } from "../../abortable-event-listener";
 import { Choice } from "../../api/models";
-import template from "./OddsButton.html";
+import { ReuseableTemplate } from "../../ReuseableTemplate";
+import templateContent from "./OddsButton.html";
 import "./OddsButton.scss";
 
 export const ChoiceAttribute = "choice";
 export const DisplayAttribute = "display";
+
+const template = new ReuseableTemplate(templateContent);
 
 export class OddsButton extends HTMLElement {
     private abortController: AbortController;
@@ -12,7 +15,7 @@ export class OddsButton extends HTMLElement {
 
     constructor() {
         super();
-        this.innerHTML = template;
+        this.appendChild(template.get());
         this.btn = this.querySelector("button");
     }
 
