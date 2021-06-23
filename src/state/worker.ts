@@ -13,6 +13,9 @@ import { UpdateScoreboardAction } from "./requests/UpdateScoreboardAction";
 import { SetResultAction } from "./requests/SetResultAction";
 import { ShowGameBets } from "./requests/ShowGameBets";
 
+
+let isStandalone: boolean = null;
+
 let state: State = {
     upcomingGames: [],
     goToLogin: false,
@@ -50,6 +53,9 @@ async function syncGames() {
         headers.append("Authorization", `Bearer ${state.accessToken.token}`);
     }
     headers.append("X-Frontend-Version", "1");
+    if (null != isStandalone) {
+        headers.append("X-Frontend-Standalone", isStandalone ? "true" : "false");
+    }
     let gamesRes = await fetch(`${environment.serverUrl}/games`, { headers: headers });
     let games: Game[] = await gamesRes.json();
     updateState(s => {
@@ -236,9 +242,10 @@ async function initializeAccessToken(accessToken: AccessToken) {
 
 }
 
-async function initialize(accessToken: AccessToken) {
-    if (accessToken) {
-        await initializeAccessToken(accessToken);
+async function initialize(msg: Initialize) {
+    isStandalone = msg.isStandalone;
+    if (msg.accessToken) {
+        await initializeAccessToken(msg.accessToken);
     }
     await getGames();
 }
@@ -371,7 +378,7 @@ async function handleMessage(msg: Actions) {
             updateState(s => { return { ...s, goToLogin: false } });
             break;
         case ActionType.Initialize:
-            await initialize(msg.accessToken);
+            await initialize(msg);
             break;
         case ActionType.Register:
             await register(msg);

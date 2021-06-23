@@ -13,6 +13,7 @@ namespace Wettma.Services.DbModels
         public List<Odds> Odds { get; set; }
         public GameResult Result { get; set; }
         public double Points { get; set; }
+        public bool DoesNotSupportDraw { get; set; }
     }
 
     public class GameResult

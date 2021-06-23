@@ -46,6 +46,10 @@ namespace Wettma.Controllers
             {
                 return ValidationProblem("The odds has expired", type: "oddsexpired");
             }
+            catch (InvalidChoiceException)
+            {
+                return ValidationProblem("The choice is not valid for this bet", type: "invalidchoice");
+            }
         }
     }
 }

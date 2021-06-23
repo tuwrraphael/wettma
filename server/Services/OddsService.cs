@@ -32,7 +32,7 @@ namespace Wettma.Services
                     GameId = g.GameId,
                     Team1Odds = g.Team1Odds,
                     Team2Odds = g.Team2Odds,
-                    DrawOdds = g.DrawOdds,
+                    DrawOdds = g.DrawOdds ?? 0,
                 }).AsAsyncEnumerable())
             {
                 yield return game;

@@ -62,7 +62,8 @@ namespace Wettma.Services
                     {
                         Team1Goals = g.Result.Team1Goals,
                         Team2Goals = g.Result.Team2Goals
-                    }
+                    },
+                    Points = g.Points
                 })
                 .AsAsyncEnumerable())
             {
@@ -74,7 +75,7 @@ namespace Wettma.Services
                         Choice = b.Choice,
                         Odds = new Models.Odds()
                         {
-                            DrawOdds = b.Odds.DrawOdds,
+                            DrawOdds = b.Odds.DrawOdds ?? 0,
                             Id = b.Odds.Id,
                             GameId = b.Odds.GameId,
                             Team1Odds = b.Odds.Team1Odds,

@@ -89,7 +89,7 @@ namespace Wettma.Services
                             GameId = openGame.Id,
                             Team1Odds = switchTeams ? matchDescription.Odds.Team2 : matchDescription.Odds.Team1,
                             Team2Odds = switchTeams ? matchDescription.Odds.Team1 : matchDescription.Odds.Team2,
-                            DrawOdds = matchDescription.Odds.Draw,
+                            DrawOdds = openGame.DoesNotSupportDraw ? null : matchDescription.Odds.Draw,
                             ValidUntil = now.AddMinutes(ValidMinutes).UtcDateTime,
                         };
                         await _wettmaContext.Odds.AddAsync(dbOdds);

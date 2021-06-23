@@ -35,6 +35,10 @@ namespace Wettma.Services
             {
                 throw new OddsExpiredException();
             }
+            if (!newestOdds.DrawOdds.HasValue && choice == Choice.Draw)
+            {
+                throw new InvalidChoiceException();
+            }
             await _wettmaContext.Bets.AddAsync(new DbModels.Bet()
             {
                 Choice = choice,

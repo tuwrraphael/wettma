@@ -1,6 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
+using System;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Wettma.RequestModels;
@@ -13,10 +18,12 @@ namespace Wettma.Controllers
     public class GamesController : ControllerBase
     {
         private readonly IGamesService _gamesService;
+        private readonly TelemetryClient _telemetryClient;
 
-        public GamesController(IGamesService gamesService)
+        public GamesController(IGamesService gamesService, TelemetryClient telemetryClient)
         {
             _gamesService = gamesService;
+            _telemetryClient = telemetryClient;
         }
 
         [HttpGet]
@@ -32,6 +39,16 @@ namespace Wettma.Controllers
                 await this.StreamArray(writer, streamWriter, _gamesService.GetGames(this.GetUserId()));
                 await writer.FlushAsync();
             }
+            var telemetry = new PageViewTelemetry("games");
+            if (Request.Headers.TryGetValue("X-Frontend-Version", out StringValues value))
+            {
+                telemetry.Properties.Add("frontendversion", value.FirstOrDefault());
+            }
+            if (Request.Headers.TryGetValue("X-Frontend-Standalone", out StringValues v2))
+            {
+                telemetry.Properties.Add("standalone", v2.FirstOrDefault());
+            }
+            _telemetryClient.TrackPageView(telemetry);
         }
 
         [HttpGet("{id}/bets")]

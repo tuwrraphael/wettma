@@ -4,6 +4,6 @@ import { ActionType as ActionType } from "./ActionType";
 
 
 export class Initialize implements Action {
-    constructor(public accessToken: AccessToken) { }
+    constructor(public accessToken: AccessToken, public isStandalone: boolean) { }
     readonly type = ActionType.Initialize;
 }

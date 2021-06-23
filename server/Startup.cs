@@ -46,6 +46,7 @@ namespace Wettma
             services.Configure<CrawlingSettings>(Configuration);
             services.Configure<AuthSettings>(Configuration);
             services.AddOptions();
+            ConfigureApplicationInsights(services);
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
               .AddJwtBearer(options =>
               {
@@ -93,6 +94,29 @@ namespace Wettma
             services.AddAuthorization(p =>
             {
                 p.AddPolicy("GameAdmin", p => p.RequireUserName(Configuration["GameAdmin"]));
+            });
+        }
+
+        private void ConfigureApplicationInsights(IServiceCollection services)
+        {
+            services.AddApplicationInsightsTelemetry(v =>
+            {
+                var devMode = WebHostEnvironment.IsDevelopment();
+                v.DeveloperMode = devMode;
+                v.EnableDiagnosticsTelemetryModule = false;
+                v.EnableAuthenticationTrackingJavaScript = false;
+                v.EnableRequestTrackingTelemetryModule = false;
+                v.AddAutoCollectedMetricExtractor = false;
+                v.EnableHeartbeat = false;
+                v.EnableDebugLogger = false;
+                v.EnableAdaptiveSampling = !devMode;
+                v.EnableEventCounterCollectionModule = false;
+                v.EnableDependencyTrackingTelemetryModule = false;
+                v.EnableAzureInstanceMetadataTelemetryModule = false;
+                v.EnableAppServicesHeartbeatTelemetryModule = false;
+                v.EnablePerformanceCounterCollectionModule = false;
+                v.EnableQuickPulseMetricStream = false;
+                v.EnableActiveTelemetryConfigurationSetup = false;
             });
         }
 

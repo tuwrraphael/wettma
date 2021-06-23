@@ -10,5 +10,6 @@ namespace Wettma.Models
         public DateTimeOffset Time { get; set; }
         public GameResult Result { get; set; }
         public MyBet MyBet { get; set; }
+        public double Points { get; set; }
     }
 }

@@ -5,6 +5,7 @@ import { LoginPageOpened } from "./state/requests/LoginPageOpened";
 import { Store } from "./state/store";
 import "./styles.scss";
 import "./components/AppBar/AppBar";
+import { isStandalone } from "./display-mode";
 
 if ("serviceWorker" in navigator) {
     window.addEventListener("load", async () => {
@@ -73,6 +74,6 @@ async function run() {
     })
 
     let accessToken = await getAccessToken();
-    store.postAction(new Initialize(accessToken));
+    store.postAction(new Initialize(accessToken, isStandalone()));
 }
 run().catch(err => console.error(err));

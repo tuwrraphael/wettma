@@ -48,6 +48,8 @@ namespace Wettma.Services
                 .IsRequired(false);
             modelBuilder.Entity<Game>().Property(g => g.Points)
                 .HasDefaultValue(2);
+            modelBuilder.Entity<Game>().Property(g => g.DoesNotSupportDraw)
+                .HasDefaultValue(false);
 
             modelBuilder.Entity<GameResult>()
                 .HasKey(g => g.Id);
