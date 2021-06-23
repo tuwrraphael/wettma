@@ -1,0 +1,10 @@
+.scoreboard-table {
+    tr {
+        & > td:first-of-type {
+            text-align: right;
+            width: 1%;
+            white-space: nowrap;
+            min-width: 1em;
+        }
+    }
+}

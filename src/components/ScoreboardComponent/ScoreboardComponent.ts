@@ -27,11 +27,9 @@ export class ScoreboardComponent extends HTMLElement {
             g => g.userId,
             g => {
                 let row = document.createElement("tr");
-                let namecol = document.createElement("td");
-                row.appendChild(namecol);
-                let pointscol = document.createElement("td");
-
-                row.appendChild(pointscol);
+                row.appendChild( document.createElement("td"));
+                row.appendChild( document.createElement("td"));
+                row.appendChild( document.createElement("td"));
                 return row;
             });
     }
@@ -41,9 +39,11 @@ export class ScoreboardComponent extends HTMLElement {
         this.store.postAction(new UpdateScoreboardAction());
         this.store.subscribe(s => {
             this.scoreboardRenderer.update(s.scoreboard, (e, d) => {
-                let nameCol: HTMLTableCellElement = <HTMLTableCellElement>e.children[0];
+                let placeCol: HTMLTableCellElement = <HTMLTableCellElement>e.children[0];
+                placeCol.innerText = `${d.place}.`;
+                let nameCol: HTMLTableCellElement = <HTMLTableCellElement>e.children[1];
                 nameCol.innerText = d.displayName;
-                let pointsCol: HTMLTableCellElement = <HTMLTableCellElement>e.children[1];
+                let pointsCol: HTMLTableCellElement = <HTMLTableCellElement>e.children[2];
                 pointsCol.innerText = `${d.points.toFixed(2)}`;
             });
             this.scoreboardLoadError.style.display = s.scoreboardRequest == RequestState.Failed ? "flex" : "none";

@@ -311,11 +311,12 @@ async function updateScoreboard(msg: UpdateScoreboardAction) {
         let content: ScoreboardEntry[] = await res.json();
         let scoreboard = content.sort((a, b) => {
             return b.points - a.points || a.displayName.localeCompare(b.displayName);
-        }).map(s => {
+        }).map((s, idx) => {
             return {
                 displayName: s.displayName,
                 points: s.points,
-                userId: s.userId
+                userId: s.userId,
+                place: idx + 1
             };
         })
         updateState(s => {
