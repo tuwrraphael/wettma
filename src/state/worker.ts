@@ -12,9 +12,15 @@ import { UpcomingGame } from "../models/UpcomingGame";
 import { UpdateScoreboardAction } from "./requests/UpdateScoreboardAction";
 import { SetResultAction } from "./requests/SetResultAction";
 import { ShowGameBets } from "./requests/ShowGameBets";
+import { FinishedGame } from "../models/FinishedGame";
+import { ShowMoreFinishedGamesAction } from "./requests/ShowMoreFinishedGames";
 
 
 let isStandalone: boolean = null;
+
+let finishedGames: FinishedGame[] = [];
+const initialFinishedGames = 5;
+const finishedGamesIncrement = 10;
 
 let state: State = {
     upcomingGames: [],
@@ -28,7 +34,8 @@ let state: State = {
     scoreboardRequest: RequestState.Unset,
     setResultRequest: RequestState.Unset,
     finishedGames: [],
-    gameBets: {}
+    gameBets: {},
+    hasMoreFinishedGames: false
 };
 
 let _odds: Odds[] = [];
@@ -45,7 +52,8 @@ type Actions = CreateBetAction
     | LogoutAction
     | UpdateScoreboardAction
     | SetResultAction
-    | ShowGameBets;
+    | ShowGameBets
+    | ShowMoreFinishedGamesAction;
 
 async function syncGames() {
     let headers = new Headers();
@@ -58,7 +66,31 @@ async function syncGames() {
     }
     let gamesRes = await fetch(`${environment.serverUrl}/games`, { headers: headers });
     let games: Game[] = await gamesRes.json();
+    finishedGames = games.filter(g => g.result).map(g => {
+        let oldGame = finishedGames.find(o => o.id == g.id);
+        return {
+            ...oldGame,
+            id: g.id,
+            team1: g.team1,
+            team2: g.team2,
+            time: new Date(g.time),
+            myBet: g.myBet ? {
+                choice: g.myBet.choice,
+                odds: {
+                    team1: g.myBet.odds.team1Odds,
+                    team2: g.myBet.odds.team2Odds,
+                    draw: g.myBet.odds.drawOdds
+                }
+            } : null,
+            result: {
+                team1Goals: g.result.team1Goals,
+                team2Goals: g.result.team2Goals
+            },
+            points: g.points
+        }
+    }).sort((a, b) => +b.time - +a.time);
     updateState(s => {
+        let stateFinishedGames = finishedGames.slice(0, finishedGames.length > initialFinishedGames ? initialFinishedGames : finishedGames.length);
         return {
             ...s,
             upcomingGames: games.filter(g => !g.result).map(g => {
@@ -80,29 +112,8 @@ async function syncGames() {
                     points: g.points
                 };
             }).sort((a, b) => +a.time - +b.time),
-            finishedGames: games.filter(g => g.result).map(g => {
-                let oldGame = s.finishedGames.find(o => o.id == g.id);
-                return {
-                    ...oldGame,
-                    id: g.id,
-                    team1: g.team1,
-                    team2: g.team2,
-                    time: new Date(g.time),
-                    myBet: g.myBet ? {
-                        choice: g.myBet.choice,
-                        odds: {
-                            team1: g.myBet.odds.team1Odds,
-                            team2: g.myBet.odds.team2Odds,
-                            draw: g.myBet.odds.drawOdds
-                        }
-                    } : null,
-                    result: {
-                        team1Goals: g.result.team1Goals,
-                        team2Goals: g.result.team2Goals
-                    },
-                    points: g.points
-                }
-            }).sort((a, b) => +b.time - +a.time)
+            finishedGames: stateFinishedGames,
+            hasMoreFinishedGames: stateFinishedGames.length < finishedGames.length
         }
     });
 }
@@ -371,6 +382,18 @@ async function setResult(msg: SetResultAction) {
     }
 }
 
+async function showMoreFinishedGames() {
+    updateState(s => {
+        let numFinishedGames = s.finishedGames.length + finishedGamesIncrement;
+        let stateFinishedGames = finishedGames.slice(0, finishedGames.length > numFinishedGames ? numFinishedGames : finishedGames.length);
+        return {
+            ...s,
+            finishedGames: stateFinishedGames,
+            hasMoreFinishedGames: stateFinishedGames.length < finishedGames.length
+        }
+    });
+}
+
 async function handleMessage(msg: Actions) {
     switch (msg.type) {
         case ActionType.CreateBet:
@@ -396,6 +419,9 @@ async function handleMessage(msg: Actions) {
             break;
         case ActionType.ShowGameBets:
             await getGameBets(msg);
+            break;
+        case ActionType.ShowMoreFinishedGames:
+            await showMoreFinishedGames();
             break;
     }
 }

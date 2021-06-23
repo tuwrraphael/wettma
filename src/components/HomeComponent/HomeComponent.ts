@@ -9,6 +9,7 @@ import { UpcomingGameDisplay } from "../UpcomingGameDisplay/UpcomingGameDisplay"
 import { FinishedGameDisplay } from "../FinishedGameDisplay/FinishedGameDisplay";
 import template from "./HomeComponent.html";
 import "./HomeComponent.scss";
+import { ShowMoreFinishedGamesAction } from "../../state/requests/ShowMoreFinishedGames";
 
 export class HomeComponent extends HTMLElement {
     private store: Store;
@@ -18,6 +19,7 @@ export class HomeComponent extends HTMLElement {
     private finishedGamesRenderer: ArrayToElementRenderer<FinishedGame, HTMLLIElement, number>;
     private router: AppRouter;
     private finishedGamesList: HTMLOListElement;
+    private showMore: HTMLButtonElement;
 
     constructor() {
         super();
@@ -26,6 +28,7 @@ export class HomeComponent extends HTMLElement {
         this.router = AppRouter.getInstance();
         this.upcomingGamesList = this.querySelector("#upcoming-games");
         this.finishedGamesList = this.querySelector("#finished-games");
+        this.showMore = this.querySelector("#show-more");
         this.upcomingGamesRenderer = new ArrayToElementRenderer(this.upcomingGamesList,
             g => g.id,
             g => {
@@ -52,6 +55,9 @@ export class HomeComponent extends HTMLElement {
                 this.router.router.navigate(link.getAttribute("href"), link.getAttribute("title"));
             }, this.abortController.signal);
         }
+        abortableEventListener(this.showMore, "click", () => {
+            this.store.postAction(new ShowMoreFinishedGamesAction());
+        }, this.abortController.signal);
     }
 
     updateState(s: State) {
@@ -66,6 +72,7 @@ export class HomeComponent extends HTMLElement {
             let e: FinishedGameDisplay = <FinishedGameDisplay>li.children[0];
             e.setGame(g);
         });
+        this.showMore.style.display = s.hasMoreFinishedGames ? "" : "none";
     }
 
     disconnectedCallback() {

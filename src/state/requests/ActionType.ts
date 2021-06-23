@@ -7,5 +7,6 @@ export const enum ActionType {
     Logout,
     UpdateScoreboard,
     SetResult,
-    ShowGameBets
+    ShowGameBets,
+    ShowMoreFinishedGames
 }
