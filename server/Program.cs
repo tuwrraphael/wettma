@@ -64,7 +64,11 @@ namespace Wettma
                 new Game() { Id = 41, Time = new DateTimeOffset(2021, 6, 28, 18, 0, 0, 0, mesz).UtcDateTime, Team1 = "Kroatien", Team2 = "Spanien", Points = 4.0, DoesNotSupportDraw = true },
                 new Game() { Id = 42, Time = new DateTimeOffset(2021, 6, 28, 21, 0, 0, 0, mesz).UtcDateTime, Team1 = "Frankreich", Team2 = "Schweiz", Points = 4.0, DoesNotSupportDraw = true },
                 new Game() { Id = 43, Time = new DateTimeOffset(2021, 6, 29, 18, 0, 0, 0, mesz).UtcDateTime, Team1 = "England", Team2 = "Deutschland", Points = 4.0, DoesNotSupportDraw = true },
-                new Game() { Id = 44, Time = new DateTimeOffset(2021, 6, 29, 21, 0, 0, 0, mesz).UtcDateTime, Team1 = "Schweden", Team2 = "Ukraine", Points = 4.0, DoesNotSupportDraw = true }
+                new Game() { Id = 44, Time = new DateTimeOffset(2021, 6, 29, 21, 0, 0, 0, mesz).UtcDateTime, Team1 = "Schweden", Team2 = "Ukraine", Points = 4.0, DoesNotSupportDraw = true },
+
+                new Game() { Id = 45, Time = new DateTimeOffset(2021, 7,  2, 18, 0, 0, 0, mesz).UtcDateTime, Team1 = "Schweiz", Team2 = "Spanien", Points = 5.0, DoesNotSupportDraw = true },
+                new Game() { Id = 46, Time = new DateTimeOffset(2021, 7,  2, 21, 0, 0, 0, mesz).UtcDateTime, Team1 = "Belgien", Team2 = "Italien", Points = 5.0, DoesNotSupportDraw = true },
+                new Game() { Id = 47, Time = new DateTimeOffset(2021, 7,  3, 18, 0, 0, 0, mesz).UtcDateTime, Team1 = "Tschechien", Team2 = "Dänemark", Points = 5.0, DoesNotSupportDraw = true }
             };
             foreach (var game in games)
             {
