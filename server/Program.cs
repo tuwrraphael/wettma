@@ -71,7 +71,8 @@ namespace Wettma
                 new Game() { Id = 47, Time = new DateTimeOffset(2021, 7,  3, 18, 0, 0, 0, mesz).UtcDateTime, Team1 = "Tschechien", Team2 = "Dänemark", Points = 5.0, DoesNotSupportDraw = true },
                 new Game() { Id = 48, Time = new DateTimeOffset(2021, 7,  3, 21, 0, 0, 0, mesz).UtcDateTime, Team1 = "Ukraine", Team2 = "England", Points = 5.0, DoesNotSupportDraw = true },
 
-                new Game() { Id = 49, Time = new DateTimeOffset(2021, 7,  6, 21, 0, 0, 0, mesz).UtcDateTime, Team1 = "Italien", Team2 = "Spanien", Points = 6.0, DoesNotSupportDraw = true }
+                new Game() { Id = 49, Time = new DateTimeOffset(2021, 7,  6, 21, 0, 0, 0, mesz).UtcDateTime, Team1 = "Italien", Team2 = "Spanien", Points = 6.0, DoesNotSupportDraw = true },
+                new Game() { Id = 50, Time = new DateTimeOffset(2021, 7,  7, 21, 0, 0, 0, mesz).UtcDateTime, Team1 = "England", Team2 = "Dänemark", Points = 6.0, DoesNotSupportDraw = true }
             };
             foreach (var game in games)
             {
