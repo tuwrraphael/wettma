@@ -22,6 +22,8 @@ let finishedGames: FinishedGame[] = [];
 const initialFinishedGames = 5;
 const finishedGamesIncrement = 10;
 
+const contest = 2;
+
 let state: State = {
     upcomingGames: [],
     goToLogin: false,
@@ -64,7 +66,7 @@ async function syncGames() {
     if (null != isStandalone) {
         headers.append("X-Frontend-Standalone", isStandalone ? "true" : "false");
     }
-    let gamesRes = await fetch(`${environment.serverUrl}/games`, { headers: headers });
+    let gamesRes = await fetch(`${environment.serverUrl}/games?contestId=${contest}`, { headers: headers });
     let games: Game[] = await gamesRes.json();
     finishedGames = games.filter(g => g.result).map(g => {
         let oldGame = finishedGames.find(o => o.id == g.id);
@@ -119,7 +121,7 @@ async function syncGames() {
 }
 
 async function getOdds() {
-    let oddsRes = await fetch(`${environment.serverUrl}/odds`);
+    let oddsRes = await fetch(`${environment.serverUrl}/odds?contestId=${contest}`);
     _odds = await oddsRes.json();
     return _odds;
 }
@@ -303,7 +305,7 @@ async function logout(smg: LogoutAction) {
 async function updateScoreboard(msg: UpdateScoreboardAction) {
     updateState(s => { return { ...s, scoreboardRequest: RequestState.InProgress } });
     try {
-        let res = await fetch(`${environment.serverUrl}/scoreboard`);
+        let res = await fetch(`${environment.serverUrl}/scoreboard?contestId=${contest}`);
         if (!res.ok) {
             updateState(s => { return { ...s, scoreboardRequest: RequestState.Failed } });
             return;

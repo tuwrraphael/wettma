@@ -12,13 +12,13 @@ const path = require('path');
 
 const allowedChars = /[^a-zA-Z0-9/]|-/g;
 function getRevision() {
-    const rev = fs.readFileSync('.git/HEAD').toString();
-    if (rev.indexOf(':') === -1) {
-        return rev;
-    } else {
-        return fs.readFileSync('.git/' + rev.substring(5).replace(allowedChars, "")).toString()
-            .replace(allowedChars, "");
-    }
+        const rev = fs.readFileSync('.git/HEAD').toString();
+        if (rev.indexOf(':') === -1) {
+            return rev;
+        } else {
+            return fs.readFileSync('.git/' + rev.substring(5).replace(allowedChars, "")).toString()
+                .replace(allowedChars, "");
+        }
 }
 
 module.exports = (env, argv) => {
@@ -159,6 +159,12 @@ module.exports = (env, argv) => {
             port: 9000,
             historyApiFallback: {
                 index: "/"
+            },
+            client: {
+                overlay: {
+                    warnings: false,
+                    errors: true
+                }
             }
         }
     };

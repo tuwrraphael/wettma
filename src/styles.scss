@@ -1,3 +1,14 @@
+$roboto-font-path: '../node_modules/roboto-fontface/fonts';
+$material-icons-font-path: '../node_modules/material-icons/iconfont/';
+
+@import "roboto-fontface/css/roboto/sass/roboto-fontface-regular.scss";
+@import "roboto-fontface/css/roboto/sass/roboto-fontface-regular-italic.scss";
+@import "roboto-fontface/css/roboto/sass/roboto-fontface-bold.scss";
+@import "roboto-fontface/css/roboto/sass/roboto-fontface-bold-italic.scss";
+
+
+@import 'material-icons/iconfont/material-icons.scss';
+
 body,
 button,
 input,

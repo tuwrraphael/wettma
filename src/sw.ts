@@ -7,8 +7,7 @@ declare global {
 }
 let cacheNames = {
     code: `code-${__CACHENAME}`,
-    asset: "asset-v1",
-    webfont: "webfont"
+    asset: "asset-v1"
 };
 
 self.addEventListener("install", function (event) {
@@ -31,12 +30,6 @@ self.addEventListener("install", function (event) {
         {
             name: cacheNames.asset,
             assets: dividedAssets.asset,
-        },
-        {
-            name: cacheNames.webfont,
-            assets: ["https://fonts.googleapis.com/icon?family=Material+Icons",
-                "https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap"
-            ]
         }
     ];
     event.waitUntil((async () => {
@@ -74,12 +67,6 @@ self.addEventListener("fetch", function (event) {
         caches.match(event.request).then(function (response) {
             if (response) {
                 return response;
-            }
-            else if (["https://fonts.gstatic.com",
-                "https://fonts.googleapis.com"].some(url => event.request.url.startsWith(url))) {
-                event.waitUntil((async () => {
-                    (await caches.open(cacheNames.webfont)).add(event.request);
-                })());
             }
             return fetch(event.request);
         })
