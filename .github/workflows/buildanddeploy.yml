@@ -6,7 +6,7 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: wettma
-  DOTNET_VERSION: '5.x.x'
+  DOTNET_VERSION: '6.x.x'
 
 
 jobs:
@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [16.x]
 
     steps:
     - uses: actions/checkout@v2
