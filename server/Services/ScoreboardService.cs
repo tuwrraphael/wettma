@@ -13,11 +13,11 @@ namespace Wettma.Services
         {
             _wettmaContext = wettmaContext;
         }
-        public async IAsyncEnumerable<ScoreboardEntry> GetEntries()
+        public async IAsyncEnumerable<ScoreboardEntry> GetEntries(int contestId)
         {
             await foreach (var user in _wettmaContext.Users.AsAsyncEnumerable())
             {
-                var bets = _wettmaContext.Bets.Where(b => b.UserId == user.Id && null != b.Odds.Game.Result).Include(b => b.Odds).ThenInclude(b => b.Game).ThenInclude(g => g.Result).ToArray();
+                var bets = _wettmaContext.Bets.Where(b => b.Odds.Game.ContestId == contestId && b.UserId == user.Id && null != b.Odds.Game.Result).Include(b => b.Odds).ThenInclude(b => b.Game).ThenInclude(g => g.Result).ToArray();
                 var groupedBets = bets.GroupBy(b => b.Odds.GameId);
                 var lastCalls = groupedBets.Select(grouping => grouping.Where(g => g.TimePlaced == grouping.Max(g => g.TimePlaced)).Single());
                 double score = 0;

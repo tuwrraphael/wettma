@@ -27,7 +27,7 @@ namespace Wettma.Controllers
         }
 
         [HttpGet]
-        public async Task Get()
+        public async Task Get(int contestId = 1)
         {
             Response.ContentType = "application/json; charset=utf-8";
             Response.StatusCode = 200;
@@ -36,7 +36,7 @@ namespace Wettma.Controllers
             await using ((writer = new Utf8JsonWriter(Response.Body)).ConfigureAwait(false))
             await using ((streamWriter = new StreamWriter(Response.Body)).ConfigureAwait(false))
             {
-                await this.StreamArray(writer, streamWriter, _gamesService.GetGames(this.GetUserId()));
+                await this.StreamArray(writer, streamWriter, _gamesService.GetGames(contestId, this.GetUserId()));
                 await writer.FlushAsync();
             }
             var telemetry = new PageViewTelemetry("games");

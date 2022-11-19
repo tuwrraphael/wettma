@@ -5,6 +5,6 @@ namespace Wettma.Services
 {
     public interface IScoreboardService
     {
-        IAsyncEnumerable<ScoreboardEntry> GetEntries();
+        IAsyncEnumerable<ScoreboardEntry> GetEntries(int contestId);
     }
 }

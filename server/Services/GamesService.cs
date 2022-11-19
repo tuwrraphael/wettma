@@ -49,9 +49,10 @@ namespace Wettma.Services
                 }).ToArray();
         }
 
-        public async IAsyncEnumerable<Models.Game> GetGames(UserId userId = null)
+        public async IAsyncEnumerable<Models.Game> GetGames(int contestId, UserId userId = null)
         {
             await foreach (var game in _wettmaContext.Games
+                .Where(g => g.ContestId == contestId)
                 .Select(g => new Models.Game
                 {
                     Id = g.Id,

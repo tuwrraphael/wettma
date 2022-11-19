@@ -6,6 +6,6 @@ namespace Wettma.Services
 {
     public interface IOddsService
     {
-        IAsyncEnumerable<Odds> GetOdds();
+        IAsyncEnumerable<Odds> GetOdds(int contestId);
     }
 }

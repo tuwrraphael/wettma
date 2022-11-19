@@ -1,9 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using Wettma.Models;
 
 namespace Wettma.Services.DbModels
 {
+
+    public class Contest
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public List<Game> Games { get; set; }
+    }
     public class Game
     {
         public int Id { get; set; }
@@ -14,6 +20,8 @@ namespace Wettma.Services.DbModels
         public GameResult Result { get; set; }
         public double Points { get; set; }
         public bool DoesNotSupportDraw { get; set; }
+        public int ContestId { get; set; }
+        public Contest Contest { get; set; }
     }
 
     public class GameResult

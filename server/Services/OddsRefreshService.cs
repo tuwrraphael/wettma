@@ -27,10 +27,12 @@ namespace Wettma.Services
             _crawlingSettings = crawlingSettings.Value;
         }
 
-        private async Task<MatchDescription[]> Crawl()
+        private async Task<MatchDescription[]> Crawl(int contestId)
         {
             var client = _httpClientFactory.CreateClient();
-            var res = await client.GetAsync(_crawlingSettings.CrawlUrl);
+            var query = System.Web.HttpUtility.ParseQueryString("");
+            query["contest"] = contestId.ToString();
+            var res = await client.GetAsync($"{_crawlingSettings.CrawlUrl}?{query}");
             if (!res.IsSuccessStatusCode)
             {
                 throw new Exception("Crawling failed");
@@ -55,7 +57,7 @@ namespace Wettma.Services
             return true;
         }
 
-        public async Task RefreshOdds()
+        public async Task RefreshOdds(int contestId)
         {
             await _semaphoreSlim.WaitAsync();
             try
@@ -66,8 +68,8 @@ namespace Wettma.Services
                     return;
                 }
                 _lastCrawlTime = now;
-                var webodds = await Crawl();
-                await foreach (var openGame in _wettmaContext.Games.Where(g => null == g.Result).AsAsyncEnumerable())
+                var webodds = await Crawl(contestId);
+                await foreach (var openGame in _wettmaContext.Games.Where(g => g.ContestId == contestId && null == g.Result).AsAsyncEnumerable())
                 {
                     var matchDescription = webodds.Where(m => ((m.Team1 == openGame.Team1 && m.Team2 == openGame.Team2) ||
                         (m.Team2 == openGame.Team1 && m.Team1 == openGame.Team2)) && Math.Abs((m.Time.UtcDateTime - openGame.Time).TotalSeconds) < 1).SingleOrDefault();

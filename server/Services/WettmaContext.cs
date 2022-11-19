@@ -13,6 +13,7 @@ namespace Wettma.Services
         }
 
         public DbSet<Game> Games { get; set; }
+        public DbSet<Contest> Contests { get; set; }
         public DbSet<GameResult> Results { get; set; }
         public DbSet<Odds> Odds { get; set; }
         public DbSet<Bet> Bets { get; set; }
@@ -25,8 +26,19 @@ namespace Wettma.Services
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Contest>()
+                .HasKey(c => c.Id);
+            modelBuilder.Entity<Contest>()
+                .Property(g => g.Id)
+                .ValueGeneratedOnAdd();
+            modelBuilder.Entity<Contest>().HasMany(g => g.Games)
+              .WithOne(o => o.Contest)
+              .HasForeignKey(o => o.ContestId);
             modelBuilder.Entity<Game>()
                 .HasKey(g => g.Id);
+            modelBuilder.Entity<Game>()
+                .Property(g => g.ContestId)
+                .HasDefaultValue(1);
             modelBuilder.Entity<Game>()
                 .Property(g => g.Id)
                 .ValueGeneratedOnAdd();
