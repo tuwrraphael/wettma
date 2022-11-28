@@ -40,7 +40,7 @@ export const CountryAbbreviation: { [s: string]: string } = {
     "Uruguay" : "uy",
     "Ghana" : "gh",
     "Brasilien" : "br",
-    "Republik Korea" : "kr",
+    "Südkorea" : "kr",
     "Kamerun": "cm",
     "Serbien" : "rs"
 };
