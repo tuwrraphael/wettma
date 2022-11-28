@@ -22,6 +22,7 @@ namespace Wettma.Services.DbModels
         public bool DoesNotSupportDraw { get; set; }
         public int ContestId { get; set; }
         public Contest Contest { get; set; }
+        public DateTime? NextCrawlTime { get; set; }
     }
 
     public class GameResult

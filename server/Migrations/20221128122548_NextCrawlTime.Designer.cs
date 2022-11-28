@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wettma.Services;
 
 namespace Wettma.Migrations
 {
     [DbContext(typeof(WettmaContext))]
-    partial class WettmaContextModelSnapshot : ModelSnapshot
+    [Migration("20221128122548_NextCrawlTime")]
+    partial class NextCrawlTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

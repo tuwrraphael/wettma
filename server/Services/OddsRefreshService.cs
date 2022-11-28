@@ -17,7 +17,6 @@ namespace Wettma.Services
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly CrawlingSettings _crawlingSettings;
         private static readonly SemaphoreSlim _semaphoreSlim = new(1);
-        private static DateTimeOffset _lastCrawlTime = DateTimeOffset.MinValue;
 
         public OddsRefreshService(WettmaContext wettmaContext, IHttpClientFactory httpClientFactory,
             IOptions<CrawlingSettings> crawlingSettings)
@@ -63,11 +62,17 @@ namespace Wettma.Services
             try
             {
                 var now = DateTimeOffset.Now;
-                if (now - _lastCrawlTime < TimeSpan.FromMinutes(ValidMinutes - 1))
+                var needRefresh = await _wettmaContext.Games.Include(g => g.Odds).Where(g => g.ContestId == contestId
+                && null == g.Result && (!g.Odds.Any(o => o.ValidUntil > now.UtcDateTime) || g.Time < now.UtcDateTime)).ToArrayAsync();
+                if (!needRefresh.Any(g => g.NextCrawlTime == null || g.NextCrawlTime <= now.UtcDateTime))
                 {
                     return;
                 }
-                _lastCrawlTime = now;
+                foreach (var o in needRefresh)
+                {
+                    o.NextCrawlTime = now.AddMinutes(ValidMinutes - 1).UtcDateTime;
+                }
+                await _wettmaContext.SaveChangesAsync();
                 var webodds = await Crawl(contestId);
                 await foreach (var openGame in _wettmaContext.Games.Where(g => g.ContestId == contestId && null == g.Result).AsAsyncEnumerable())
                 {
@@ -77,24 +82,41 @@ namespace Wettma.Services
                     {
                         var switchTeams = matchDescription.Team2 == openGame.Team1;
                         var lastOdds = await _wettmaContext.Odds.Where(o => o.GameId == openGame.Id).OrderByDescending(o => o.ValidUntil).FirstOrDefaultAsync();
+
+                        var updateOdds = true;
+
                         if (null != lastOdds)
                         {
                             if (OddsEqual(matchDescription.Odds, lastOdds, switchTeams))
                             {
                                 lastOdds.ValidUntil = now.AddMinutes(ValidMinutes).UtcDateTime;
-                                continue;
+                                updateOdds = false;
                             }
                         }
 
-                        var dbOdds = new DbModels.Odds()
+                        if (updateOdds)
                         {
-                            GameId = openGame.Id,
-                            Team1Odds = switchTeams ? matchDescription.Odds.Team2 : matchDescription.Odds.Team1,
-                            Team2Odds = switchTeams ? matchDescription.Odds.Team1 : matchDescription.Odds.Team2,
-                            DrawOdds = openGame.DoesNotSupportDraw ? null : matchDescription.Odds.Draw,
-                            ValidUntil = now.AddMinutes(ValidMinutes).UtcDateTime,
-                        };
-                        await _wettmaContext.Odds.AddAsync(dbOdds);
+                            var dbOdds = new DbModels.Odds()
+                            {
+                                GameId = openGame.Id,
+                                Team1Odds = switchTeams ? matchDescription.Odds.Team2 : matchDescription.Odds.Team1,
+                                Team2Odds = switchTeams ? matchDescription.Odds.Team1 : matchDescription.Odds.Team2,
+                                DrawOdds = openGame.DoesNotSupportDraw ? null : matchDescription.Odds.Draw,
+                                ValidUntil = now.AddMinutes(ValidMinutes).UtcDateTime,
+                            };
+                            await _wettmaContext.Odds.AddAsync(dbOdds);
+                        }
+
+                        if (matchDescription.Result != null)
+                        {
+                            var result = new DbModels.GameResult()
+                            {
+                                GameId = openGame.Id,
+                                Team1Goals = switchTeams ? matchDescription.Result.Team2 : matchDescription.Result.Team1,
+                                Team2Goals = switchTeams ? matchDescription.Result.Team1 : matchDescription.Result.Team2,
+                            };
+                            await _wettmaContext.Results.AddAsync(result);
+                        }
                     }
                 }
                 await _wettmaContext.SaveChangesAsync();

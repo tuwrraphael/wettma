@@ -19,11 +19,7 @@ namespace Wettma.Services
         public async IAsyncEnumerable<Models.Odds> GetOdds(int contestId)
         {
             var now = DateTimeOffset.Now;
-            var needRefresh = await _wettmaContext.Games.AnyAsync(g => g.ContestId == contestId && null == g.Result && !g.Odds.Any(o => o.ValidUntil > DateTime.UtcNow));
-            if (needRefresh)
-            {
-                await _oddsRefreshService.RefreshOdds(contestId);
-            }
+            await _oddsRefreshService.RefreshOdds(contestId);
             await foreach (var game in _wettmaContext.Games.Where(g => g.ContestId == contestId && null == g.Result)
                 .Select(g => g.Odds.Where(d => d.ValidUntil == g.Odds.Max(g => g.ValidUntil)).SingleOrDefault())
                 .Select(g => new Models.Odds
