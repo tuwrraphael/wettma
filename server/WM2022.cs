@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Wettma.Services.DbModels;
 
 namespace Wettma
@@ -57,6 +57,14 @@ namespace Wettma
                 new Game() { Id = 97, Time = new DateTimeOffset(2022, 12, 2, 16, 0, 0, 0, mez).UtcDateTime, Team1 = "Ghana", Team2 = "Uruguay", Points = 2.0, DoesNotSupportDraw = false, ContestId = 2},
                 new Game() { Id = 98, Time = new DateTimeOffset(2022, 12, 2, 20, 0, 0, 0, mez).UtcDateTime, Team1 = "Kamerun", Team2 = "Brasilien", Points = 2.0, DoesNotSupportDraw = false, ContestId = 2},
                 new Game() { Id = 99, Time = new DateTimeOffset(2022, 12, 2, 20, 0, 0, 0, mez).UtcDateTime, Team1 = "Serbien", Team2 = "Schweiz", Points = 2.0, DoesNotSupportDraw = false, ContestId = 2},
+                new Game() { Id = 100, Time = new DateTimeOffset(2022, 12, 3, 16, 0, 0, 0, mez).UtcDateTime, Team1 = "Niederlande", Team2 = "USA", Points = 4.0, DoesNotSupportDraw = true, ContestId = 2},
+                new Game() { Id = 101, Time = new DateTimeOffset(2022, 12, 3, 20, 0, 0, 0, mez).UtcDateTime, Team1 = "Argentinien", Team2 = "Australien", Points = 4.0, DoesNotSupportDraw = true, ContestId = 2},
+                new Game() { Id = 102, Time = new DateTimeOffset(2022, 12, 4, 16, 0, 0, 0, mez).UtcDateTime, Team1 = "Frankreich", Team2 = "Polen", Points = 4.0, DoesNotSupportDraw = true, ContestId = 2},
+                new Game() { Id = 103, Time = new DateTimeOffset(2022, 12, 4, 20, 0, 0, 0, mez).UtcDateTime, Team1 = "England", Team2 = "Senegal", Points = 4.0, DoesNotSupportDraw = true, ContestId = 2},
+                new Game() { Id = 104, Time = new DateTimeOffset(2022, 12, 5, 16, 0, 0, 0, mez).UtcDateTime, Team1 = "Japan", Team2 = "Kroatien", Points = 4.0, DoesNotSupportDraw = true, ContestId = 2},
+                new Game() { Id = 105, Time = new DateTimeOffset(2022, 12, 5, 20, 0, 0, 0, mez).UtcDateTime, Team1 = "Brasilien", Team2 = "Südkorea", Points = 4.0, DoesNotSupportDraw = true, ContestId = 2},
+                new Game() { Id = 106, Time = new DateTimeOffset(2022, 12, 6, 16, 0, 0, 0, mez).UtcDateTime, Team1 = "Marokko", Team2 = "Spanien", Points = 4.0, DoesNotSupportDraw = true, ContestId = 2},
+                new Game() { Id = 107, Time = new DateTimeOffset(2022, 12, 6, 20, 0, 0, 0, mez).UtcDateTime, Team1 = "Portugal", Team2 = "Schweiz", Points = 4.0, DoesNotSupportDraw = true, ContestId = 2}
             };
             return games;
         }

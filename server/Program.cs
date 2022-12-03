@@ -35,14 +35,6 @@ namespace Wettma
                     await context.Games.AddAsync(game);
                 }
             }
-            foreach(var game in context.Games.Where(g => g.ContestId == 2 && g.Team1 == "Republik Korea"))
-            {
-                game.Team1 = "Südkorea";
-            }
-            foreach (var game in context.Games.Where(g => g.ContestId == 2 && g.Team2 == "Republik Korea"))
-            {
-                game.Team2 = "Südkorea";
-            }
             await context.SaveChangesAsync();
         }
         public static async Task Main(string[] args)
