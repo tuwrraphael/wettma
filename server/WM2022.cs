@@ -64,7 +64,11 @@ namespace Wettma
                 new Game() { Id = 104, Time = new DateTimeOffset(2022, 12, 5, 16, 0, 0, 0, mez).UtcDateTime, Team1 = "Japan", Team2 = "Kroatien", Points = 4.0, DoesNotSupportDraw = true, ContestId = 2},
                 new Game() { Id = 105, Time = new DateTimeOffset(2022, 12, 5, 20, 0, 0, 0, mez).UtcDateTime, Team1 = "Brasilien", Team2 = "Südkorea", Points = 4.0, DoesNotSupportDraw = true, ContestId = 2},
                 new Game() { Id = 106, Time = new DateTimeOffset(2022, 12, 6, 16, 0, 0, 0, mez).UtcDateTime, Team1 = "Marokko", Team2 = "Spanien", Points = 4.0, DoesNotSupportDraw = true, ContestId = 2},
-                new Game() { Id = 107, Time = new DateTimeOffset(2022, 12, 6, 20, 0, 0, 0, mez).UtcDateTime, Team1 = "Portugal", Team2 = "Schweiz", Points = 4.0, DoesNotSupportDraw = true, ContestId = 2}
+                new Game() { Id = 107, Time = new DateTimeOffset(2022, 12, 6, 20, 0, 0, 0, mez).UtcDateTime, Team1 = "Portugal", Team2 = "Schweiz", Points = 4.0, DoesNotSupportDraw = true, ContestId = 2},
+                new Game() { Id = 108, Time = new DateTimeOffset(2022, 12, 9, 16, 0, 0, 0, mez).UtcDateTime, Team1 = "Kroatien", Team2 = "Brasilien", Points = 5.0, DoesNotSupportDraw = false, ContestId = 2},
+                new Game() { Id = 109, Time = new DateTimeOffset(2022, 12, 9, 20, 0, 0, 0, mez).UtcDateTime, Team1 = "Niederlande", Team2 = "Argentinien", Points = 5.0, DoesNotSupportDraw = false, ContestId = 2},
+                new Game() { Id = 110, Time = new DateTimeOffset(2022, 12, 10, 16, 0, 0, 0, mez).UtcDateTime, Team1 = "Marokko", Team2 = "Portugal", Points = 5.0, DoesNotSupportDraw = false, ContestId = 2},
+                new Game() { Id = 111, Time = new DateTimeOffset(2022, 12, 10, 20, 0, 0, 0, mez).UtcDateTime, Team1 = "England", Team2 = "Frankreich", Points = 5.0, DoesNotSupportDraw = false, ContestId = 2}
             };
             return games;
         }
