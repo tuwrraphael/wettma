@@ -2,8 +2,10 @@
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -19,11 +21,13 @@ namespace Wettma.Controllers
     {
         private readonly IGamesService _gamesService;
         private readonly TelemetryClient _telemetryClient;
+        private readonly WettmaContext wettmaContext;
 
-        public GamesController(IGamesService gamesService, TelemetryClient telemetryClient)
+        public GamesController(IGamesService gamesService, TelemetryClient telemetryClient, WettmaContext wettmaContext)
         {
             _gamesService = gamesService;
             _telemetryClient = telemetryClient;
+            this.wettmaContext = wettmaContext;
         }
 
         [HttpGet]
@@ -60,6 +64,97 @@ namespace Wettma.Controllers
                 return Ok(res);
             }
             return NotFound();
+        }
+
+        [HttpGet("berechnung")]
+        public async Task<IActionResult> Berechnung()
+        {
+            var games = await wettmaContext.Games.Include(g => g.Result)
+                .Where(g => g.ContestId == 1 && g.DoesNotSupportDraw == false)
+                .Select(g => new { name = $"{g.Team1} - {g.Team2}", g.Id, g.Result, Time = new DateTimeOffset(g.Time, TimeSpan.Zero), g.Points }).ToArrayAsync();
+            var results = new List<dynamic>();
+            foreach (var game in games)
+            {
+                var correct = game.Result.Team1Goals == game.Result.Team2Goals ? Choice.Draw : game.Result.Team1Goals > game.Result.Team2Goals ? Choice.Team1 : Choice.Team2;
+
+                var betsByUser = (await wettmaContext.Bets.Include(b => b.Odds).Where(b => b.Odds.GameId == game.Id).Include(b => b.User).ToArrayAsync()).GroupBy(b => b.UserId);
+              
+
+                var earlyBets = betsByUser.ToDictionary(b => b.Key, b => b.Where(b => new DateTimeOffset(b.TimePlaced, TimeSpan.Zero) <= game.Time.AddHours(-24)).OrderByDescending(d => d.TimePlaced).FirstOrDefault())
+                    .Where(b => b.Value != null).Select(b => b.Value);
+
+                var sum1 = earlyBets.Where(b => b.Choice == Choice.Team1).Count();
+                var sum2 = earlyBets.Where(b => b.Choice == Choice.Team2).Count();
+                var sumX = earlyBets.Where(b => b.Choice == Choice.Draw).Count();
+                Choice majority;
+                var lastOdds =  wettmaContext.Odds.Where(o => o.GameId == game.Id)
+                    .ToArray()
+                    .Select(o => new { o.Team1Odds, o.Team2Odds, o.DrawOdds, Time = new DateTimeOffset(o.ValidUntil, TimeSpan.Zero).AddMinutes(-15) })
+                    .Where(o => o.Time <= game.Time.AddHours(-24))
+                    .FirstOrDefault();
+                if (lastOdds == null)
+                {
+                    continue;
+                }
+
+                if (sum1 > sum2 && sum1 > sumX)
+                {
+                    majority = Choice.Team1;
+                }
+                else if (sum2 > sum1 && sum2 > sumX)
+                {
+                    majority = Choice.Team2;
+                }
+                else
+                {
+                    majority = Choice.Draw;
+                }
+                
+                var majorityOdds = majority switch
+                {
+                    Choice.Team1 => lastOdds.Team1Odds,
+                    Choice.Team2 => lastOdds.Team2Odds,
+                    Choice.Draw => lastOdds.DrawOdds,
+                    _ => 0
+                };
+                var inFavorOdds = (new Dictionary<Choice, double>() { { Choice.Team1, lastOdds.Team1Odds }, { Choice.Team2, lastOdds.Team2Odds }, { Choice.Draw, lastOdds.DrawOdds.Value } })
+                    .OrderBy(kv => kv.Value).First();
+                results.Add(new
+                {
+                    game.Id,
+                    game = game.name,
+                    game.Time,
+                    majority = majority,
+                    correct = correct,
+                    correctMajority = majority == correct,
+                    correctInFavor = inFavorOdds.Key == correct,
+                    majorityBetInFavor = inFavorOdds.Key == majority,
+                    lastOdds,
+                    money = (double)(majority == correct ? majorityOdds : 0),
+                    moneyInFavor = (double)(inFavorOdds.Key == correct ? inFavorOdds.Value : 0),
+                });
+            }
+            double totalMoney = 0;
+            double totalMoneyInFavor = 0;
+            foreach (var result in results)
+            {
+                totalMoney += result.money;
+                totalMoneyInFavor += result.moneyInFavor;
+            }
+            double numGames = results.Count();
+
+            var res = new
+            {
+               results,
+               percentageCorrectMajority = 
+               results.Where(r => r.correctMajority).Count() / (double)results.Count(),
+               totalGames = results.Count(),
+               finalMoney = totalMoney - numGames,
+               finalMoneyInFavor = totalMoneyInFavor - numGames,
+               percetageMajorityBetInFavor = results.Where(r => r.majorityBetInFavor).Count() / (double)results.Count(),
+               percentageCorrectInFavor = results.Where(r => r.correctInFavor).Count() / (double)results.Count(),
+            };
+            return Ok(res);
         }
 
         [Authorize("GameAdmin")]
