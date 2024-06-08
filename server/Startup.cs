@@ -41,6 +41,7 @@ namespace Wettma
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IBetsService, BetsService>();
             services.AddTransient<IScoreboardService, ScoreboardService>();
+            services.AddTransient<IComputerService, ComputerService>();
             services.AddHttpClient();
             services.AddControllers();
             services.Configure<CrawlingSettings>(Configuration);

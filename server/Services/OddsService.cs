@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Wettma.Services
 {
@@ -33,6 +34,21 @@ namespace Wettma.Services
             {
                 yield return game;
             }
+        }
+
+        public async Task<Models.Odds> GetOddsForGame(int gameId)
+        {
+            var now = DateTimeOffset.Now;
+            return await _wettmaContext.Games.Where(g => g.Id == gameId)
+                .Select(g => g.Odds.Where(d => d.ValidUntil == g.Odds.Max(g => g.ValidUntil)).SingleOrDefault())
+                .Select(g => new Models.Odds
+                {
+                    Id = g.Id,
+                    GameId = g.GameId,
+                    Team1Odds = g.Team1Odds,
+                    Team2Odds = g.Team2Odds,
+                    DrawOdds = g.DrawOdds ?? 0,
+                }).SingleAsync();
         }
     }
 }

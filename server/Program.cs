@@ -26,9 +26,18 @@ namespace Wettma
                     Id = 2
                 });
             }
+            if (!context.Contests.Any(c => c.Id == 3))
+            {
+                await context.Contests.AddAsync(new Contest()
+                {
+                    Name = "EM2024",
+                    Id = 3
+                });
+            }
 
             foreach (var game in EM2021.GetGames()
-                .Union(WM2022.GetGames()))
+                .Union(WM2022.GetGames())
+                .Union(EM2024.GetGames()))
             {
                 if (!await context.Games.Where(g => g.Id == game.Id).AnyAsync())
                 {
