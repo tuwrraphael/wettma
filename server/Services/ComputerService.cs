@@ -22,6 +22,57 @@ namespace Wettma.Services
             _oddsService = oddsService;
         }
 
+        public async Task<bool> PlaceBet(int computerId, int gameId, Choice choice, string reason)
+        {
+            var now = DateTimeOffset.Now;
+            var game = await _wettmaContext.Games.Where(o => o.Id == gameId).SingleOrDefaultAsync();
+            if (null == game)
+            {
+                throw new ArgumentException(nameof(gameId));
+            }
+            if (now > new DateTimeOffset(game.Time, TimeSpan.Zero).Add(TimeSpan.FromMinutes(-5)))
+            {
+                throw new GameStartedException();
+            }
+            await _oddsRefreshService.RefreshOdds(game.ContestId);
+            var gameOdds = _wettmaContext.Games.Where(d => d.Id == game.Id).SelectMany(g => g.Odds);
+            var newestOdds = await gameOdds.Where(g => g.ValidUntil == gameOdds.Max(s => s.ValidUntil)).SingleOrDefaultAsync();
+            var currentBet = await _wettmaContext.ComputerBets
+                .Include(b => b.Odds)
+                .Where(b => b.ComputerPlayerId == computerId && b.Odds.GameId == gameId)
+                .OrderByDescending(b => b.TimePlaced).FirstOrDefaultAsync();
+            if (currentBet != null)
+            {
+                if (currentBet.Choice == choice)
+                {
+                    var currentBetOdds = currentBet.Choice == Choice.Draw ? currentBet.Odds.DrawOdds : currentBet.Choice == Choice.Team1 ? currentBet.Odds.Team1Odds : currentBet.Odds.Team2Odds;
+                    var newOdds = choice == Choice.Draw ? newestOdds.DrawOdds : choice == Choice.Team1 ? newestOdds.Team1Odds : newestOdds.Team2Odds;
+                    if (currentBetOdds >= newOdds)
+                    {
+                        return false;
+                    }
+                }
+            }
+            if (new DateTimeOffset(newestOdds.ValidUntil, TimeSpan.Zero) < now)
+            {
+                throw new OddsExpiredException();
+            }
+            if (!newestOdds.DrawOdds.HasValue && choice == Choice.Draw)
+            {
+                throw new InvalidChoiceException();
+            }
+            await _wettmaContext.ComputerBets.AddAsync(new DbModels.ComputerBet()
+            {
+                Choice = choice,
+                OddsId = newestOdds.Id,
+                TimePlaced = now.UtcDateTime,
+                ComputerPlayerId = computerId,
+                Reason = reason
+            });
+            await _wettmaContext.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<ComputerGameInfo> GetGameInfo(int gameId)
         {
             var game = await _wettmaContext.Games.Where(g => g.Id == gameId).SingleOrDefaultAsync();
@@ -91,6 +142,24 @@ namespace Wettma.Services
                     Points = game.Points
                 }
             };
+        }
+
+        public async Task<Models.ComputerBet[]> GetComputerBets(int gameId)
+        {
+            var bettingEndTime = DateTimeOffset.Now.AddMinutes(5).UtcDateTime;
+            if (!await _wettmaContext.Games.Where(g => g.Id == gameId && g.Time <= bettingEndTime).AnyAsync())
+            {
+                return null;
+            }
+            var betsByComputer = (await _wettmaContext.ComputerBets.Where(b => b.Odds.GameId == gameId && !b.ComputerPlayer.DisplayAsUser).Include(b => b.ComputerPlayer).ToArrayAsync()).GroupBy(b => b.ComputerPlayerId);
+            return betsByComputer.Select(b => { return new { Computer = b.First().ComputerPlayer, Bet = b.Where(g => g.TimePlaced == b.Max(d => d.TimePlaced)).Single() }; })
+                .Select(b => new Models.ComputerBet()
+                {
+                    Choice = b.Bet.Choice,
+                    DisplayName = b.Computer.Name,
+                    ComputerPlayerId = b.Computer.Id,
+                    Reason = b.Bet.Reason
+                }).ToArray();
         }
     }
 }

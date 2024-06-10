@@ -1,53 +1,55 @@
-<points-display></points-display>
-<form data-ref="odds-form" class="odds-form">
-    <h3 class="team1">
-        <span class="flag-icon flag-icon-tr" data-ref="team1-flag"></span>
-        <span data-ref="team1"></span>
-    </h3>
-    <h3 class="team2">
-        <span class="flag-icon flag-icon-it" data-ref="team2-flag"></span>
-        <span data-ref="team2"></span>
-    </h3>
-    <span data-ref="time" class="time"></span>
-    <odds-button class="choice-team1" choice="0" data-ref="team1-odds"></odds-button>
-    <odds-button class="choice-draw" choice="2" data-ref="draw-odds"></odds-button>
-    <odds-button class="choice-team2" choice="1" data-ref="team2-odds"></odds-button>
-</form>
-<div data-ref="my-bet" class="status-msg my-bet">
-    <span class="material-icons" title="Tipp abgegeben">
-        done
-    </span>
-    <span>
-        Dein Tipp
-        <strong>
-            <span data-ref="my-bet-team"></span>
-        </strong>
-        für
-        <strong>
-            <span data-ref="my-bet-odds"></span></strong>.
-    </span>
-</div>
-<div data-ref="saving" class="status-msg saving">
-    <span class="material-icons" title="Tipp wird gepeichert.">
-        donut_large
-    </span>
-    Dein Tipp wird gespeichert.
-</div>
-<div data-ref="odds-changed-error" class="status-msg warning">
-    <span class="material-icons" title="Tipp nicht gespeichert: Quoten geändert">
-        warning
-    </span>
-    Dein Tipp wurde nicht gespeichert, weil sich die Quoten geändert haben.
-</div>
-<div data-ref="game-started-error" class="status-msg error">
-    <span class="material-icons" title="Spiel hat bereits begonnen">
-        error
-    </span>
-    Dein Tipp wurde nicht gespeichert, weil das Spiel bereits begonnen hat.
-</div>
-<div data-ref="save-error" class="status-msg error">
-    <span class="material-icons" title="Tipp konnte nicht gespeichert werden">
-        error
-    </span>
-    Beim Speichern ist ein Fehler aufgetreten.
+<div class="upcoming-game-display__content">
+    <points-display></points-display>
+    <form data-ref="odds-form" class="odds-form">
+        <h3 class="team1">
+            <span class="flag-icon flag-icon-tr" data-ref="team1-flag"></span>
+            <span data-ref="team1"></span>
+        </h3>
+        <h3 class="team2">
+            <span class="flag-icon flag-icon-it" data-ref="team2-flag"></span>
+            <span data-ref="team2"></span>
+        </h3>
+        <span data-ref="time" class="time"></span>
+        <odds-button class="choice-team1" choice="0" data-ref="team1-odds"></odds-button>
+        <odds-button class="choice-draw" choice="2" data-ref="draw-odds"></odds-button>
+        <odds-button class="choice-team2" choice="1" data-ref="team2-odds"></odds-button>
+    </form>
+    <div data-ref="my-bet" class="status-msg my-bet">
+        <span class="material-icons" title="Tipp abgegeben">
+            done
+        </span>
+        <span>
+            Dein Tipp
+            <strong>
+                <span data-ref="my-bet-team"></span>
+            </strong>
+            für
+            <strong>
+                <span data-ref="my-bet-odds"></span></strong>.
+        </span>
+    </div>
+    <div data-ref="saving" class="status-msg saving">
+        <span class="material-icons" title="Tipp wird gepeichert.">
+            donut_large
+        </span>
+        Dein Tipp wird gespeichert.
+    </div>
+    <div data-ref="odds-changed-error" class="status-msg warning">
+        <span class="material-icons" title="Tipp nicht gespeichert: Quoten geändert">
+            warning
+        </span>
+        Dein Tipp wurde nicht gespeichert, weil sich die Quoten geändert haben.
+    </div>
+    <div data-ref="game-started-error" class="status-msg error">
+        <span class="material-icons" title="Spiel hat bereits begonnen">
+            error
+        </span>
+        Dein Tipp wurde nicht gespeichert, weil das Spiel bereits begonnen hat.
+    </div>
+    <div data-ref="save-error" class="status-msg error">
+        <span class="material-icons" title="Tipp konnte nicht gespeichert werden">
+            error
+        </span>
+        Beim Speichern ist ein Fehler aufgetreten.
+    </div>
 </div>

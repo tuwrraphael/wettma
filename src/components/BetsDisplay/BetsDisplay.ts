@@ -1,51 +1,68 @@
 import { abortableEventListener } from "../../abortable-event-listener";
 import { Choice } from "../../api/models";
 import { ArrayToElementRenderer } from "../../ArrayToElementRenderer";
-import { CountryAbbreviation } from "../../CountryAbbreviation";
+import { CountryFIFACodes } from "../../CountryAbbreviation";
 import { FinishedGame } from "../../models/FinishedGame";
-import { GameBets, UserBet } from "../../models/GameBets";
+import { ComputerBet, UserBet } from "../../models/GameBets";
 import { UpcomingGame } from "../../models/UpcomingGame";
 import { ReuseableTemplate } from "../../ReuseableTemplate";
 import { ShowGameBets } from "../../state/requests/ShowGameBets";
 import { RequestState, State } from "../../state/state";
 import { Store } from "../../state/store";
+import { ComputerBetDisplay } from "../ComputerBetDisplay/ComputerBetDisplay";
 import templateContent from "./BetsDisplay.html";
 import "./BetsDisplay.scss";
 
 const crossIcon = `<span class="material-icons">close</span>`;
 const correctIcon = `<span class="material-icons">done</span>`;
 
+enum ExpandState {
+    None,
+    All,
+    Computer
+}
+
 const template = new ReuseableTemplate(templateContent);
 
 export class BetsDisplay extends HTMLElement {
-    private expandLink: HTMLAnchorElement;
     private abortController: AbortController;
     private store: Store;
-    private showBets: boolean;
     private game: UpcomingGame | FinishedGame;
-    private betsRenderer: ArrayToElementRenderer<UserBet, HTMLTableRowElement, string>;
+    private betsRenderer: ArrayToElementRenderer<UserBet | ComputerBet, HTMLTableRowElement, string>;
+    private computerBetsRenderer: ArrayToElementRenderer<ComputerBet, ComputerBetDisplay, number>;
     private table: HTMLTableElement;
     private loading: HTMLDivElement;
     private tableBody: HTMLTableSectionElement;
-    private expandText: HTMLSpanElement;
-    private expandArrow: HTMLSpanElement;
     private team1Label: HTMLTableCellElement;
     private team2Label: HTMLTableCellElement;
+    private expandAll: HTMLButtonElement;
+    private expandComputer: HTMLButtonElement;
+
+    private expandState: ExpandState = ExpandState.None;
+    private betsDisplayContent: HTMLDivElement;
+    private computerBets: HTMLDivElement;
 
     constructor() {
         super();
         this.appendChild(template.get());
-        this.expandLink = this.querySelector(`[data-ref="expand-link"]`);
+        this.expandAll = this.querySelector(`[data-ref="expand-all"]`);
+        this.expandComputer = this.querySelector(`[data-ref="expand-computer"]`);
         this.table = this.querySelector("table");
         this.loading = this.querySelector(`[data-ref="loading"]`);
         this.store = Store.getInstance();
         this.tableBody = this.querySelector("tbody");
-        this.expandText = this.querySelector(`[data-ref="expand-text"]`);
-        this.expandArrow = this.querySelector(`[data-ref="expand-arrow"]`);
         this.team1Label = this.querySelector(`[data-ref="team1label"]`);
         this.team2Label = this.querySelector(`[data-ref="team2label"]`);
+        this.betsDisplayContent = this.querySelector(`.bets-display__content`);
+        this.computerBets = this.querySelector(`[data-ref="computer-bets"]`);
         this.betsRenderer = new ArrayToElementRenderer(this.tableBody,
-            g => g.userId,
+            g => {
+                if ("userId" in g) {
+                    return g.userId;
+                } else {
+                    return "computer" + g.computerPlayerId;
+                }
+            },
             g => {
                 let row = document.createElement("tr");
                 let namecol = document.createElement("td");
@@ -55,23 +72,43 @@ export class BetsDisplay extends HTMLElement {
                 row.appendChild(document.createElement("td"));
                 return row;
             });
+        this.computerBetsRenderer = new ArrayToElementRenderer(this.computerBets,
+            g => g.computerPlayerId,
+            g => new ComputerBetDisplay());
     }
 
     connectedCallback() {
         this.abortController = new AbortController();
-        abortableEventListener(this.expandLink, "click", ev => {
-            ev.preventDefault();
-            this.showBets = !this.showBets;
-            this.table.style.display = this.showBets ? "" : "none";
-            this.expandArrow.classList.toggle("rotate", this.showBets);
-            if (this.showBets) {
+        abortableEventListener(this.expandAll, "click", ev => {
+            if (this.expandState == ExpandState.All) {
+                this.expandState = ExpandState.None;
+            } else {
+                this.expandState = ExpandState.All;
                 this.store.postAction(new ShowGameBets(this.game.id));
             }
-            this.expandText.innerText = !this.showBets ? "Tipps von allen anzeigen" : "Tipps von allen verbergen";
+            this.render();
+        }, this.abortController.signal);
+        abortableEventListener(this.expandComputer, "click", ev => {
+            if (this.expandState == ExpandState.Computer) {
+                this.expandState = ExpandState.None;
+            } else {
+                this.expandState = ExpandState.Computer;
+                this.store.postAction(new ShowGameBets(this.game.id));
+            }
+            this.render();
         }, this.abortController.signal);
         this.store.subscribe(s => {
             this.updateBets(s);
         }, this.abortController.signal);
+        this.render();
+    }
+
+    render() {
+        this.table.style.display = this.expandState == ExpandState.All ? "" : "none";
+        this.computerBets.style.display = this.expandState == ExpandState.Computer ? "" : "none";
+        this.expandAll.classList.toggle("expand-button--active", this.expandState == ExpandState.All);
+        this.expandComputer.classList.toggle("expand-button--active", this.expandState == ExpandState.Computer);
+        this.betsDisplayContent.style.display = this.expandState == ExpandState.None ? "none" : "";
     }
 
     disconnectedCallback() {
@@ -80,9 +117,11 @@ export class BetsDisplay extends HTMLElement {
 
     updateBets(s: State) {
         let bets = s.gameBets[this.game.id];
-        this.loading.style.display = bets && bets.requestState == RequestState.InProgress ? "flex" : "none";
-        if (bets && bets.bets) {
-            this.betsRenderer.update(bets.bets, (e, d) => {
+        let inProgress = bets && (bets.requestState == RequestState.InProgress
+            || bets.computerBetRequestState == RequestState.InProgress);
+        this.loading.style.display = inProgress ? "flex" : "none";
+        if (bets) {
+            this.betsRenderer.update([...(bets.bets||[]),...(bets.computerBets||[])], (e, d) => {
                 let correct = false;
                 if ("result" in this.game) {
                     correct =
@@ -98,12 +137,17 @@ export class BetsDisplay extends HTMLElement {
                 (<HTMLTableCellElement>e.children[3]).innerHTML = d.choice == Choice.Team2 ? icon : "";
             });
         }
+        if (bets && bets.computerBets) {
+            this.computerBetsRenderer.update(bets.computerBets, (e, d) => {
+                e.setComputerBet(d, this.game);
+            });
+        }
     }
 
     setGame(game: UpcomingGame | FinishedGame) {
         this.game = game;
-        this.team1Label.innerText = CountryAbbreviation[game.team1].toUpperCase();
-        this.team2Label.innerText = CountryAbbreviation[game.team2].toUpperCase();
+        this.team1Label.innerText = CountryFIFACodes[game.team1].toUpperCase();
+        this.team2Label.innerText = CountryFIFACodes[game.team2].toUpperCase();
         this.updateBets(this.store.state);
     }
 }

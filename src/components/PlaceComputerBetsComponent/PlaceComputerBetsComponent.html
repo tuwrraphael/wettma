@@ -1,0 +1,24 @@
+<div class="container">
+    <section class="section">
+        <h2>
+            Computerspieler Tipps Eintragen
+        </h2>
+        <form>
+            <div>
+                <label for="computer-id">Computerspieler</label>
+                <select id="computer-id" name="computer-id" required="required">
+                    <option value="">Bitte wählen</option>
+                    <option value="1">Antoni Ingrid</option>
+                    <option value="2">alberto</option>
+                </select>
+            </div>
+            <div>
+                <textarea id="computer-bets" name="computer-bets" placeholder="Paste computer bets here"
+                    required="required"></textarea>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+        <span style="display: none;" id="save-failed">Speichern fehlgeschlagen</span>
+        <span style="display: none;" id="save-successful">Speichern erfolgreich</span>
+    </section>
+</div>

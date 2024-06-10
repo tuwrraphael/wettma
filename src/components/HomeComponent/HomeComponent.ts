@@ -24,40 +24,40 @@ export class HomeComponent extends HTMLElement {
     constructor() {
         super();
         this.innerHTML = template;
-        // this.store = Store.getInstance();
-        // this.router = AppRouter.getInstance();
-        // this.upcomingGamesList = this.querySelector("#upcoming-games");
-        // this.finishedGamesList = this.querySelector("#finished-games");
-        // this.showMore = this.querySelector("#show-more");
-        // this.upcomingGamesRenderer = new ArrayToElementRenderer(this.upcomingGamesList,
-        //     g => g.id,
-        //     g => {
-        //         let li = document.createElement("li");
-        //         li.appendChild(new UpcomingGameDisplay());
-        //         return li;
-        //     });
-        // this.finishedGamesRenderer = new ArrayToElementRenderer(this.finishedGamesList,
-        //     g => g.id,
-        //     g => {
-        //         let li = document.createElement("li");
-        //         li.appendChild(new FinishedGameDisplay());
-        //         return li;
-        //     });
+        this.store = Store.getInstance();
+        this.router = AppRouter.getInstance();
+        this.upcomingGamesList = this.querySelector("#upcoming-games");
+        this.finishedGamesList = this.querySelector("#finished-games");
+        this.showMore = this.querySelector("#show-more");
+        this.upcomingGamesRenderer = new ArrayToElementRenderer(this.upcomingGamesList,
+            g => g.id,
+            g => {
+                let li = document.createElement("li");
+                li.appendChild(new UpcomingGameDisplay());
+                return li;
+            });
+        this.finishedGamesRenderer = new ArrayToElementRenderer(this.finishedGamesList,
+            g => g.id,
+            g => {
+                let li = document.createElement("li");
+                li.appendChild(new FinishedGameDisplay());
+                return li;
+            });
     }
 
     connectedCallback() {
-        // this.abortController = new AbortController();
-        // this.store.subscribe(s => this.updateState(s), this.abortController.signal);
-        // this.updateState(this.store.state);
-        // for (let link of this.querySelectorAll(`[data-ref="spa-link"]`)) {
-        //     abortableEventListener(link, "click", e => {
-        //         e.preventDefault();
-        //         this.router.router.navigate(link.getAttribute("href"), link.getAttribute("title"));
-        //     }, this.abortController.signal);
-        // }
-        // abortableEventListener(this.showMore, "click", () => {
-        //     this.store.postAction(new ShowMoreFinishedGamesAction());
-        // }, this.abortController.signal);
+        this.abortController = new AbortController();
+        this.store.subscribe(s => this.updateState(s), this.abortController.signal);
+        this.updateState(this.store.state);
+        for (let link of this.querySelectorAll(`[data-ref="spa-link"]`)) {
+            abortableEventListener(link, "click", e => {
+                e.preventDefault();
+                this.router.router.navigate(link.getAttribute("href"), link.getAttribute("title"));
+            }, this.abortController.signal);
+        }
+        abortableEventListener(this.showMore, "click", () => {
+            this.store.postAction(new ShowMoreFinishedGamesAction());
+        }, this.abortController.signal);
     }
 
     updateState(s: State) {
@@ -76,7 +76,7 @@ export class HomeComponent extends HTMLElement {
     }
 
     disconnectedCallback() {
-        // this.abortController.abort();
+        this.abortController.abort();
     }
 }
 

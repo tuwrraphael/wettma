@@ -40,13 +40,25 @@ namespace Wettma.Services
                 return null;
             }
             var betsByUser = (await _wettmaContext.Bets.Where(b => b.Odds.GameId == gameId).Include(b => b.User).ToArrayAsync()).GroupBy(b => b.UserId);
-            return betsByUser.Select(b => { return new { User = b.First().User, Bet = b.Where(g => g.TimePlaced == b.Max(d => d.TimePlaced)).Single() }; })
+            var betsByComputer = (await _wettmaContext.ComputerBets.Where(b => b.ComputerPlayer.DisplayAsUser && b.Odds.GameId == gameId).Include(b => b.ComputerPlayer).ToArrayAsync()).GroupBy(b => b.ComputerPlayerId);
+            var userBets = betsByUser.Select(b => { return new { User = b.First().User, Bet = b.Where(g => g.TimePlaced == b.Max(d => d.TimePlaced)).Single() }; })
                 .Select(b => new Models.UserBet()
                 {
                     Choice = b.Bet.Choice,
                     DisplayName = b.User.DisplayName,
                     UserId = b.User.Id
                 }).ToArray();
+            var computerBets = betsByComputer.Select(b => { return new { Computer = b.First().ComputerPlayer, Bet = b.Where(g => g.TimePlaced == b.Max(d => d.TimePlaced)).Single() }; })
+                .Select(b => new Models.UserBet()
+                {
+                    Choice = b.Bet.Choice,
+                    DisplayName = b.Computer.Name,
+                    UserId = "c" + b.Computer.Id
+                }).ToArray();
+            // mix in computer bets to userbets randomly
+            var random = new Random(gameId);
+            var allBets = userBets.Concat(computerBets).OrderBy(b => random.Next()).ToArray();
+            return allBets;
         }
 
         public async IAsyncEnumerable<Models.Game> GetGames(int contestId, UserId userId = null)

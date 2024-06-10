@@ -18,6 +18,8 @@ namespace Wettma.Services
         public DbSet<Odds> Odds { get; set; }
         public DbSet<Bet> Bets { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<ComputerPlayer> ComputerPlayers { get; set; }
+        public DbSet<ComputerBet> ComputerBets { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -107,6 +109,31 @@ namespace Wettma.Services
             modelBuilder.Entity<Bet>()
                 .HasOne(p => p.Odds)
                 .WithMany(p => p.Bets)
+                .HasForeignKey(p => p.OddsId)
+                .IsRequired();
+
+            modelBuilder.Entity<ComputerPlayer>()
+               .HasKey(g => g.Id);
+
+            modelBuilder.Entity<ComputerBet>()
+               .HasKey(g => g.Id);
+            modelBuilder.Entity<ComputerBet>()
+                .Property(g => g.Id)
+                .ValueGeneratedOnAdd();
+            modelBuilder.Entity<ComputerBet>()
+                .Property(g => g.TimePlaced)
+                .IsRequired();
+            modelBuilder.Entity<ComputerBet>()
+                .Property(g => g.Choice)
+                .IsRequired();
+            modelBuilder.Entity<ComputerBet>()
+                .HasOne(p => p.ComputerPlayer)
+                .WithMany(p => p.Bets)
+                .HasForeignKey(p => p.ComputerPlayerId)
+                .IsRequired();
+            modelBuilder.Entity<ComputerBet>()
+                .HasOne(p => p.Odds)
+                .WithMany(p => p.ComputerBets)
                 .HasForeignKey(p => p.OddsId)
                 .IsRequired();
         }

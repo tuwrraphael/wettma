@@ -14,6 +14,8 @@ import { SetResultAction } from "./requests/SetResultAction";
 import { ShowGameBets } from "./requests/ShowGameBets";
 import { FinishedGame } from "../models/FinishedGame";
 import { ShowMoreFinishedGamesAction } from "./requests/ShowMoreFinishedGames";
+import { PlaceComputerBetsAction } from "./requests/PlaceComputerBetsAction";
+import { ComputerBet } from "../models/GameBets";
 
 
 let isStandalone: boolean = null;
@@ -35,6 +37,7 @@ let state: State = {
     scoreboard: [],
     scoreboardRequest: RequestState.Unset,
     setResultRequest: RequestState.Unset,
+    placeComputerBetsRequest: RequestState.Unset,
     finishedGames: [],
     gameBets: {},
     hasMoreFinishedGames: false
@@ -55,7 +58,8 @@ type Actions = CreateBetAction
     | UpdateScoreboardAction
     | SetResultAction
     | ShowGameBets
-    | ShowMoreFinishedGamesAction;
+    | ShowMoreFinishedGamesAction
+    | PlaceComputerBetsAction;
 
 async function syncGames() {
     let headers = new Headers();
@@ -334,7 +338,16 @@ async function updateScoreboard(msg: UpdateScoreboardAction) {
 }
 
 async function getGameBets(msg: ShowGameBets) {
-    updateState(s => { return { ...s, gameBets: { ...s.gameBets, [msg.gameId]: { ...s.gameBets[msg.gameId], requestState: RequestState.InProgress } } } });
+    updateState(s => {
+        return {
+            ...s, gameBets: {
+                ...s.gameBets, [msg.gameId]: {
+                    ...s.gameBets[msg.gameId], requestState: RequestState.InProgress,
+                    computerBetRequestState: RequestState.InProgress
+                }
+            }
+        }
+    });
     try {
         let res = await fetch(`${environment.serverUrl}/games/${msg.gameId}/bets`);
         if (!res.ok) {
@@ -353,6 +366,34 @@ async function getGameBets(msg: ShowGameBets) {
                                 displayName: b.displayName,
                                 choice: b.choice,
                                 userId: b.userId
+                            };
+                        })
+                    }
+                }
+            }
+        });
+    } catch (err) {
+        updateState(s => { return { ...s, gameBets: { ...s.gameBets, [msg.gameId]: { ...s.gameBets[msg.gameId], requestState: RequestState.Failed } } } });
+    }
+    try {
+        let res = await fetch(`${environment.serverUrl}/computer/games/${msg.gameId}/bets`);
+        if (!res.ok) {
+            updateState(s => { return { ...s, gameBets: { ...s.gameBets, [msg.gameId]: { ...s.gameBets[msg.gameId], computerBetRequestState: RequestState.Failed } } } });
+            return;
+        }
+        let content: ComputerBet[] = await res.json();
+        updateState(s => {
+            return {
+                ...s, gameBets: {
+                    ...s.gameBets, [msg.gameId]: {
+                        ...s.gameBets[msg.gameId],
+                        computerBetRequestState: RequestState.Successful,
+                        computerBets: content.map(b => {
+                            return {
+                                displayName: b.displayName,
+                                choice: b.choice,
+                                reason: b.reason,
+                                computerPlayerId: b.computerPlayerId
                             };
                         })
                     }
@@ -382,6 +423,27 @@ async function setResult(msg: SetResultAction) {
         }
     } catch (err) {
         updateState(s => { return { ...s, setResultRequest: RequestState.Failed } });
+    }
+}
+
+async function placeComputerBets(msg: PlaceComputerBetsAction) {
+    updateState(s => { return { ...s, placeComputerBetsRequest: RequestState.InProgress } });
+    try {
+        let res = await fetch(`${environment.serverUrl}/computer/bets`, {
+            headers: {
+                "Authorization": `Bearer ${state.accessToken.token}`,
+                "Content-Type": "application/json"
+            },
+            method: "POST",
+            body: JSON.stringify(msg.request)
+        });
+        if (res.ok) {
+            updateState(s => { return { ...s, placeComputerBetsRequest: RequestState.Successful } });
+        } else {
+            updateState(s => { return { ...s, placeComputerBetsRequest: RequestState.Failed } });
+        }
+    } catch (err) {
+        updateState(s => { return { ...s, placeComputerBetsRequest: RequestState.Failed } });
     }
 }
 
@@ -419,6 +481,9 @@ async function handleMessage(msg: Actions) {
             break;
         case ActionType.SetResult:
             await setResult(msg);
+            break;
+        case ActionType.PlaceComputerBets:
+            await placeComputerBets(msg);
             break;
         case ActionType.ShowGameBets:
             await getGameBets(msg);

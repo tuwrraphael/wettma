@@ -44,6 +44,7 @@ namespace Wettma.Services.DbModels
         public double? DrawOdds { get; set; }
         public DateTime ValidUntil { get; set; }
         public List<Bet> Bets { get; set; }
+        public List<ComputerBet> ComputerBets { get; set; }
     }
 
     public class User
@@ -59,9 +60,29 @@ namespace Wettma.Services.DbModels
         public int Id { get; set; }
         public string UserId { get; set; }
         public User User { get; set; }
-        public int OddsId { get; set; }
         public DateTime TimePlaced { get; set; }
         public Choice Choice { get; set; }
+        public int OddsId { get; set; }
         public Odds Odds { get; set; }
+    }
+
+    public class ComputerBet
+    {
+        public int Id { get; set; }
+        public int ComputerPlayerId { get; set; }
+        public ComputerPlayer ComputerPlayer { get; set; }
+        public DateTime TimePlaced { get; set; }
+        public Choice Choice { get; set; }
+        public int OddsId { get; set; }
+        public Odds Odds { get; set; }
+        public string Reason { get; set; }
+    }
+
+    public class ComputerPlayer
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public bool DisplayAsUser { get; set; }
+        public List<ComputerBet> Bets { get; set; }
     }
 }

@@ -7,7 +7,16 @@ export interface UserBet {
     userId:string;
 }
 
+export interface ComputerBet {
+    computerPlayerId: number;
+    displayName: string;
+    choice: Choice;
+    reason: string;
+}
+
 export interface GameBets {
     bets: UserBet[];
+    computerBets: ComputerBet[];
     requestState: RequestState;
+    computerBetRequestState: RequestState;
 }

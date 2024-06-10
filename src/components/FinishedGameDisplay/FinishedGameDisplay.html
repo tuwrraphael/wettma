@@ -1,43 +1,45 @@
-<points-display></points-display>
-<div class="finished-game">
-    <h3 class="team1">
-        <span class="flag-icon flag-icon-tr" data-ref="team1-flag"></span>
-        <span data-ref="team1"></span>
-    </h3>
-    <h3 class="team2">
-        <span class="flag-icon flag-icon-it" data-ref="team2-flag"></span>
-        <span data-ref="team2"></span>
-    </h3>
-    <span data-ref="time" class="time"></span>
-    <h3 class="goals1" data-ref="goals1"></h3>
-    <h3 class="goals2" data-ref="goals2"></h3>
-</div>
-<div data-ref="correct-bet" class="status-msg correct-bet">
-    <span class="material-icons" title="Tipp abgegeben">
-        done
-    </span>
-    <span>
-        Dein Tipp
-        <strong>
-            <span data-ref="my-bet-team"></span>
-        </strong>
-        für
-        <strong>
-            <span data-ref="my-bet-odds"></span></strong> war richtig.
-    </span>
-</div>
-<div data-ref="wrong-bet" class="status-msg wrong-bet">
-    <span class="material-icons" title="Tipp abgegeben">
-        close
-    </span>
-    <span>
-        Dein Tipp
-        <strong>
-            <span data-ref="my-bet-team"></span>
-        </strong>
-        für
-        <strong>
-            <span data-ref="my-bet-odds"></span></strong> war leider nicht richtig.
-    </span>
+<div class="finished-game-display__content">
+    <points-display></points-display>
+    <div class="finished-game">
+        <h3 class="team1">
+            <span class="flag-icon flag-icon-tr" data-ref="team1-flag"></span>
+            <span data-ref="team1"></span>
+        </h3>
+        <h3 class="team2">
+            <span class="flag-icon flag-icon-it" data-ref="team2-flag"></span>
+            <span data-ref="team2"></span>
+        </h3>
+        <span data-ref="time" class="time"></span>
+        <h3 class="goals1" data-ref="goals1"></h3>
+        <h3 class="goals2" data-ref="goals2"></h3>
+    </div>
+    <div data-ref="correct-bet" class="status-msg correct-bet">
+        <span class="material-icons" title="Tipp abgegeben">
+            done
+        </span>
+        <span>
+            Dein Tipp
+            <strong>
+                <span data-ref="my-bet-team"></span>
+            </strong>
+            für
+            <strong>
+                <span data-ref="my-bet-odds"></span></strong> war richtig.
+        </span>
+    </div>
+    <div data-ref="wrong-bet" class="status-msg wrong-bet">
+        <span class="material-icons" title="Tipp abgegeben">
+            close
+        </span>
+        <span>
+            Dein Tipp
+            <strong>
+                <span data-ref="my-bet-team"></span>
+            </strong>
+            für
+            <strong>
+                <span data-ref="my-bet-odds"></span></strong> war leider nicht richtig.
+        </span>
+    </div>
 </div>
 <bets-display data-ref="bets-display"></bets-display>

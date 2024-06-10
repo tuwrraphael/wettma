@@ -23,6 +23,7 @@ export interface State {
     scoreboardRequest: RequestState;
     scoreboard: ScoreboardEntry[];
     setResultRequest: RequestState;
+    placeComputerBetsRequest: RequestState;
     gameBets: { [gameId: number]: GameBets },
     hasMoreFinishedGames : boolean
 }

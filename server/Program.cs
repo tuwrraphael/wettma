@@ -44,6 +44,13 @@ namespace Wettma
                     await context.Games.AddAsync(game);
                 }
             }
+            foreach (var computerPlayer in ComputerPlayers.GetComputerPlayers())
+            {
+                if (!await context.ComputerPlayers.Where(c => c.Id == computerPlayer.Id).AnyAsync())
+                {
+                    await context.ComputerPlayers.AddAsync(computerPlayer);
+                }
+            }
             await context.SaveChangesAsync();
         }
         public static async Task Main(string[] args)

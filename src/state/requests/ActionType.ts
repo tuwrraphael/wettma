@@ -8,5 +8,6 @@ export const enum ActionType {
     UpdateScoreboard,
     SetResult,
     ShowGameBets,
-    ShowMoreFinishedGames
+    ShowMoreFinishedGames,
+    PlaceComputerBets
 }

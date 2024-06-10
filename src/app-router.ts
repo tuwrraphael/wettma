@@ -38,6 +38,10 @@ export class AppRouter {
                         self.activeRoute = "setresult";
                         let { SetResultComponent } = await import("./components/SetResultComponent/SetResultComponent");
                         return new SetResultComponent();
+                    case "placecomputerbets":
+                        self.activeRoute = "placecomputerbets";
+                        let { PlaceComputerBetsComponent } = await import("./components/PlaceComputerBetsComponent/PlaceComputerBetsComponent");
+                        return new PlaceComputerBetsComponent();
                     default:
                         self.activeRoute = "home";
                         let c = new HomeComponent();

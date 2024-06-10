@@ -60,7 +60,13 @@ upcoming-game-display {
         0 2px 2px 0 rgb(0 0 0 / 14%),
         0 1px 5px 0 rgb(0 0 0 / 12%);
     display: block;
-    padding: 0.8em;
+    // padding: 0.8em;
     margin-bottom: 0.5em;
     position: relative;
+}
+
+.upcoming-game-display {
+    &__content {
+        padding: 0.8em;
+    }
 }
