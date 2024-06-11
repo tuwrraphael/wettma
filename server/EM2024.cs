@@ -33,8 +33,18 @@ namespace Wettma
                 new Game() { Id = 137, Time = new DateTimeOffset(2024, 6, 22, 15, 0, 0, 0, mesz).UtcDateTime, Team1 = "Georgien", Team2 = "Tschechien", Points = 2.0, DoesNotSupportDraw = false, ContestId = 3},
                 new Game() { Id = 138, Time = new DateTimeOffset(2024, 6, 22, 18, 0, 0, 0, mesz).UtcDateTime, Team1 = "Türkei", Team2 = "Portugal", Points = 2.0, DoesNotSupportDraw = false, ContestId = 3},
                 new Game() { Id = 139, Time = new DateTimeOffset(2024, 6, 22, 21, 0, 0, 0, mesz).UtcDateTime, Team1 = "Belgien", Team2 = "Rumänien", Points = 2.0, DoesNotSupportDraw = false, ContestId = 3},
-                new Game() { Id = 140, Time = new DateTimeOffset(2024, 6, 26, 18, 0, 0, 0, mesz).UtcDateTime, Team1 = "Ukraine", Team2 = "Belgien", Points = 2.0, DoesNotSupportDraw = false, ContestId = 3},
-
+                new Game() { Id = 140, Time = new DateTimeOffset(2024, 6, 23, 21, 0, 0, 0, mesz).UtcDateTime, Team1 = "Schweiz", Team2 = "Deutschland", Points = 2.0, DoesNotSupportDraw = false, ContestId = 3},
+                new Game() { Id = 141, Time = new DateTimeOffset(2024, 6, 23, 21, 0, 0, 0, mesz).UtcDateTime, Team1 = "Schottland", Team2 = "Ungarn", Points = 2.0, DoesNotSupportDraw = false, ContestId = 3},
+                new Game() { Id = 142, Time = new DateTimeOffset(2024, 6, 24, 21, 0, 0, 0, mesz).UtcDateTime, Team1 = "Albanien", Team2 = "Spanien", Points = 2.0, DoesNotSupportDraw = false, ContestId = 3},
+                new Game() { Id = 143, Time = new DateTimeOffset(2024, 6, 24, 21, 0, 0, 0, mesz).UtcDateTime, Team1 = "Kroatien", Team2 = "Italien", Points = 2.0, DoesNotSupportDraw = false, ContestId = 3},
+                new Game() { Id = 144, Time = new DateTimeOffset(2024, 6, 25, 18, 0, 0, 0, mesz).UtcDateTime, Team1 = "Niederlande", Team2 = "Österreich", Points = 2.0, DoesNotSupportDraw = false, ContestId = 3},
+                new Game() { Id = 145, Time = new DateTimeOffset(2024, 6, 25, 18, 0, 0, 0, mesz).UtcDateTime, Team1 = "Frankreich", Team2 = "Polen", Points = 2.0, DoesNotSupportDraw = false, ContestId = 3},
+                new Game() { Id = 146, Time = new DateTimeOffset(2024, 6, 25, 21, 0, 0, 0, mesz).UtcDateTime, Team1 = "England", Team2 = "Slowenien", Points = 2.0, DoesNotSupportDraw = false, ContestId = 3},
+                new Game() { Id = 147, Time = new DateTimeOffset(2024, 6, 25, 21, 0, 0, 0, mesz).UtcDateTime, Team1 = "Dänemark", Team2 = "Serbien", Points = 2.0, DoesNotSupportDraw = false, ContestId = 3},
+                new Game() { Id = 148, Time = new DateTimeOffset(2024, 6, 26, 18, 0, 0, 0, mesz).UtcDateTime, Team1 = "Slowakei", Team2 = "Rumänien", Points = 2.0, DoesNotSupportDraw = false, ContestId = 3},
+                new Game() { Id = 149, Time = new DateTimeOffset(2024, 6, 26, 18, 0, 0, 0, mesz).UtcDateTime, Team1 = "Ukraine", Team2 = "Belgien", Points = 2.0, DoesNotSupportDraw = false, ContestId = 3},
+                new Game() { Id = 150, Time = new DateTimeOffset(2024, 6, 26, 21, 0, 0, 0, mesz).UtcDateTime, Team1 = "Georgien", Team2 = "Portugal", Points = 2.0, DoesNotSupportDraw = false, ContestId = 3},
+                new Game() { Id = 151, Time = new DateTimeOffset(2024, 6, 26, 21, 0, 0, 0, mesz).UtcDateTime, Team1 = "Tschechien", Team2 = "Türkei", Points = 2.0, DoesNotSupportDraw = false, ContestId = 3}
             };
             return games;
         }
