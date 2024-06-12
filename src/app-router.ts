@@ -42,6 +42,10 @@ export class AppRouter {
                         self.activeRoute = "placecomputerbets";
                         let { PlaceComputerBetsComponent } = await import("./components/PlaceComputerBetsComponent/PlaceComputerBetsComponent");
                         return new PlaceComputerBetsComponent();
+                    case "participants":
+                        self.activeRoute = "participants";
+                        let { ParticipantsComponent } = await import("./components/ParticipantsComponent/ParticipantsComponent");
+                        return new ParticipantsComponent();
                     default:
                         self.activeRoute = "home";
                         let c = new HomeComponent();

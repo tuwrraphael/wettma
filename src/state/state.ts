@@ -25,5 +25,6 @@ export interface State {
     setResultRequest: RequestState;
     placeComputerBetsRequest: RequestState;
     gameBets: { [gameId: number]: GameBets },
-    hasMoreFinishedGames : boolean
+    hasMoreFinishedGames: boolean,
+    participants: { userId: string, displayName: string }[]
 }

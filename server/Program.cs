@@ -34,10 +34,44 @@ namespace Wettma
                     Id = 3
                 });
             }
-
-            foreach (var game in EM2021.GetGames()
+            var allGames = EM2021.GetGames()
                 .Union(WM2022.GetGames())
-                .Union(EM2024.GetGames()))
+                .Union(EM2024.GetGames());
+
+            var wrong = await context.Games.Where(g => g.Id == 140 && g.Team1 == "Ukraine").ToArrayAsync();
+            foreach (var g in wrong)
+            {
+                var result = await context.Results.Where(r => r.GameId == g.Id).SingleOrDefaultAsync();
+                if (result != null)
+                {
+                    context.Results.Remove(result);
+                }
+                var bets = await context.Bets
+                    .Include(b => b.Odds)
+                    .Where(r => r.Odds.GameId == g.Id).ToArrayAsync();
+                foreach (var b in bets)
+                {
+                    context.Bets.Remove(b);
+                }
+                var computerPlayerBets = await context.ComputerBets
+                     .Include(b => b.Odds)
+                    .Where(r => r.Odds.GameId == g.Id).ToArrayAsync();
+                foreach (var b in computerPlayerBets)
+                {
+                    context.ComputerBets.Remove(b);
+                }
+                var odds = await context.Odds
+                    .Where(o => o.GameId == g.Id)
+                    .ToArrayAsync();
+                foreach (var o in odds)
+                {
+                    context.Odds.Remove(o);
+                }
+                context.Remove(g);
+            }
+            await context.SaveChangesAsync();
+
+            foreach (var game in allGames)
             {
                 if (!await context.Games.Where(g => g.Id == game.Id).AnyAsync())
                 {
@@ -53,6 +87,7 @@ namespace Wettma
             }
             await context.SaveChangesAsync();
         }
+
         public static async Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();

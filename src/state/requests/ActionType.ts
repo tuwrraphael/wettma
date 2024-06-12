@@ -9,5 +9,6 @@ export const enum ActionType {
     SetResult,
     ShowGameBets,
     ShowMoreFinishedGames,
-    PlaceComputerBets
+    PlaceComputerBets,
+    LoadParticipants
 }

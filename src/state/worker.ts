@@ -16,6 +16,7 @@ import { FinishedGame } from "../models/FinishedGame";
 import { ShowMoreFinishedGamesAction } from "./requests/ShowMoreFinishedGames";
 import { PlaceComputerBetsAction } from "./requests/PlaceComputerBetsAction";
 import { ComputerBet } from "../models/GameBets";
+import { LoadParticipantsAction } from "./requests/LoadParticipantsAction";
 
 
 let isStandalone: boolean = null;
@@ -40,7 +41,8 @@ let state: State = {
     placeComputerBetsRequest: RequestState.Unset,
     finishedGames: [],
     gameBets: {},
-    hasMoreFinishedGames: false
+    hasMoreFinishedGames: false,
+    participants: []
 };
 
 let _odds: Odds[] = [];
@@ -59,7 +61,10 @@ type Actions = CreateBetAction
     | SetResultAction
     | ShowGameBets
     | ShowMoreFinishedGamesAction
-    | PlaceComputerBetsAction;
+    | PlaceComputerBetsAction
+    | LoadParticipantsAction;
+
+let queued: Actions[] = [];
 
 async function syncGames() {
     let headers = new Headers();
@@ -267,6 +272,12 @@ async function initialize(msg: Initialize) {
         await initializeAccessToken(msg.accessToken);
     }
     await getGames();
+    if (queued.length > 0) {
+        for (let q of queued) {
+            await handleMessage(q);
+        }
+        queued = [];
+    }
 }
 
 async function register(msg: RegisterAction) {
@@ -334,6 +345,28 @@ async function updateScoreboard(msg: UpdateScoreboardAction) {
         });
     } catch (err) {
         updateState(s => { return { ...s, scoreboardRequest: RequestState.Failed } });
+    }
+}
+
+async function updateParticipants(msg: LoadParticipantsAction) {
+    try {
+        let res = await fetch(`${environment.serverUrl}/participants?contestId=${contest}`, {
+            headers: {
+                "Authorization": `Bearer ${state.accessToken.token}`,
+            }
+        });
+        if (!res.ok) {
+            return;
+        }
+        let participants: { userId: string, displayName: string }[] = await res.json();
+        updateState(s => {
+            return {
+                ...s,
+                participants: participants
+            }
+        });
+    } catch (err) {
+        console.error(err);
     }
 }
 
@@ -460,6 +493,10 @@ async function showMoreFinishedGames() {
 }
 
 async function handleMessage(msg: Actions) {
+    if (!state.accessToken && [ActionType.LoadParticipants].includes(msg.type)) {
+        queued.push(msg);
+        return;
+    }
     switch (msg.type) {
         case ActionType.CreateBet:
             await createBet(msg);
@@ -487,6 +524,9 @@ async function handleMessage(msg: Actions) {
             break;
         case ActionType.ShowGameBets:
             await getGameBets(msg);
+            break;
+        case ActionType.LoadParticipants:
+            await updateParticipants(msg);
             break;
         case ActionType.ShowMoreFinishedGames:
             await showMoreFinishedGames();

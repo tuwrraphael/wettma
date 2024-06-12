@@ -28,6 +28,15 @@ namespace Wettma.Services
             return await _wettmaContext.Users.Where(u => u.GoogleId == sub).SingleOrDefaultAsync();
         }
 
+        public async Task<Profile[]> GetParticipants(int contestId)
+        {
+            return await _wettmaContext.Users.Where(u => u.Bets.Where(b => b.Odds.Game.ContestId == contestId).Any()).Select(p => new Models.Profile()
+            {
+                DisplayName = p.DisplayName,
+                UserId = p.Id
+            }).ToArrayAsync();
+        }
+
         public async Task<Profile> GetProfile(UserId userId)
         {
             return await _wettmaContext.Users.Where(u => u.Id == userId.InternalId).Select(p => new Models.Profile()
