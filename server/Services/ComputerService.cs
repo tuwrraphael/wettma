@@ -49,6 +49,8 @@ namespace Wettma.Services
                     var newOdds = choice == Choice.Draw ? newestOdds.DrawOdds : choice == Choice.Team1 ? newestOdds.Team1Odds : newestOdds.Team2Odds;
                     if (currentBetOdds >= newOdds)
                     {
+                        currentBet.Reason = reason;
+                        await _wettmaContext.SaveChangesAsync();
                         return false;
                     }
                 }
