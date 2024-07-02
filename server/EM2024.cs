@@ -53,6 +53,10 @@ namespace Wettma
                 new Game() { Id = 157, Time = new DateTimeOffset(2024, 7, 1, 21, 0, 0, 0, mesz).UtcDateTime, Team1 = "Portugal", Team2 = "Slowenien", Points = 4.0, DoesNotSupportDraw = true, ContestId = 3},
                 new Game() { Id = 158, Time = new DateTimeOffset(2024, 7, 2, 18, 0, 0, 0, mesz).UtcDateTime, Team1 = "Rumänien", Team2 = "Niederlande", Points = 4.0, DoesNotSupportDraw = true, ContestId = 3},
                 new Game() { Id = 159, Time = new DateTimeOffset(2024, 7, 2, 21, 0, 0, 0, mesz).UtcDateTime, Team1 = "Österreich", Team2 = "Türkei", Points = 4.0, DoesNotSupportDraw = true, ContestId = 3},
+                new Game() { Id = 160, Time = new DateTimeOffset(2024, 7, 5, 18, 0, 0, 0, mesz).UtcDateTime, Team1 = "Spanien", Team2 = "Deutschland", Points = 5.0, DoesNotSupportDraw = true, ContestId = 3},
+                new Game() { Id = 161, Time = new DateTimeOffset(2024, 7, 5, 21, 0, 0, 0, mesz).UtcDateTime, Team1 = "Portugal", Team2 = "Frankreich", Points = 5.0, DoesNotSupportDraw = true, ContestId = 3},
+                new Game() { Id = 162, Time = new DateTimeOffset(2024, 7, 6, 18, 0, 0, 0, mesz).UtcDateTime, Team1 = "England", Team2 = "Schweiz", Points = 5.0, DoesNotSupportDraw = true, ContestId = 3},
+                new Game() { Id = 163, Time = new DateTimeOffset(2024, 7, 6, 21, 0, 0, 0, mesz).UtcDateTime, Team1 = "Niederlande", Team2 = "Türkei", Points = 5.0, DoesNotSupportDraw = true, ContestId = 3}
 
             };
             return games;
