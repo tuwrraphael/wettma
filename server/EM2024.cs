@@ -59,7 +59,7 @@ namespace Wettma
                 new Game() { Id = 163, Time = new DateTimeOffset(2024, 7, 6, 21, 0, 0, 0, mesz).UtcDateTime, Team1 = "Niederlande", Team2 = "Türkei", Points = 5.0, DoesNotSupportDraw = true, ContestId = 3},
                 new Game() { Id = 164, Time = new DateTimeOffset(2024, 7, 9, 21, 0, 0, 0, mesz).UtcDateTime, Team1 = "Spanien", Team2 = "Frankreich", Points = 6.0, DoesNotSupportDraw = true, ContestId = 3},
                 new Game() { Id = 165, Time = new DateTimeOffset(2024, 7, 10, 21, 0, 0, 0, mesz).UtcDateTime, Team1 = "Niederlande", Team2 = "England", Points = 6.0, DoesNotSupportDraw = true, ContestId = 3},
-
+                new Game() { Id = 166, Time = new DateTimeOffset(2024, 7, 14, 21, 0, 0, 0, mesz).UtcDateTime, Team1 = "Spanien", Team2 = "England", Points = 8.0, DoesNotSupportDraw = true, ContestId = 3}
             };
             return games;
         }
