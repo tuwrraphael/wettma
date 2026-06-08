@@ -36,7 +36,7 @@ export class BetsDisplay extends HTMLElement {
     private team1Label: HTMLTableCellElement;
     private team2Label: HTMLTableCellElement;
     private expandAll: HTMLButtonElement;
-    private expandComputer: HTMLButtonElement;
+    // private expandComputer: HTMLButtonElement;
 
     private expandState: ExpandState = ExpandState.None;
     private betsDisplayContent: HTMLDivElement;
@@ -46,7 +46,7 @@ export class BetsDisplay extends HTMLElement {
         super();
         this.appendChild(template.get());
         this.expandAll = this.querySelector(`[data-ref="expand-all"]`);
-        this.expandComputer = this.querySelector(`[data-ref="expand-computer"]`);
+        // this.expandComputer = this.querySelector(`[data-ref="expand-computer"]`);
         this.table = this.querySelector("table");
         this.loading = this.querySelector(`[data-ref="loading"]`);
         this.store = Store.getInstance();
@@ -88,15 +88,15 @@ export class BetsDisplay extends HTMLElement {
             }
             this.render();
         }, this.abortController.signal);
-        abortableEventListener(this.expandComputer, "click", ev => {
-            if (this.expandState == ExpandState.Computer) {
-                this.expandState = ExpandState.None;
-            } else {
-                this.expandState = ExpandState.Computer;
-                this.store.postAction(new ShowGameBets(this.game.id));
-            }
-            this.render();
-        }, this.abortController.signal);
+        // abortableEventListener(this.expandComputer, "click", ev => {
+        //     if (this.expandState == ExpandState.Computer) {
+        //         this.expandState = ExpandState.None;
+        //     } else {
+        //         this.expandState = ExpandState.Computer;
+        //         this.store.postAction(new ShowGameBets(this.game.id));
+        //     }
+        //     this.render();
+        // }, this.abortController.signal);
         this.store.subscribe(s => {
             this.updateBets(s);
         }, this.abortController.signal);
@@ -107,7 +107,7 @@ export class BetsDisplay extends HTMLElement {
         this.table.style.display = this.expandState == ExpandState.All ? "" : "none";
         this.computerBets.style.display = this.expandState == ExpandState.Computer ? "" : "none";
         this.expandAll.classList.toggle("expand-button--active", this.expandState == ExpandState.All);
-        this.expandComputer.classList.toggle("expand-button--active", this.expandState == ExpandState.Computer);
+        // this.expandComputer.classList.toggle("expand-button--active", this.expandState == ExpandState.Computer);
         this.betsDisplayContent.style.display = this.expandState == ExpandState.None ? "none" : "";
     }
 

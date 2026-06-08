@@ -34,9 +34,18 @@ namespace Wettma
                     Id = 3
                 });
             }
+            if (!context.Contests.Any(c => c.Id == 4))
+            {
+                await context.Contests.AddAsync(new Contest()
+                {
+                    Name = "WM2026",
+                    Id = 4
+                });
+            }
             var allGames = EM2021.GetGames()
                 .Union(WM2022.GetGames())
-                .Union(EM2024.GetGames());
+                .Union(EM2024.GetGames())
+                .Union(WM2026.GetGames());
 
             var wrong = await context.Games.Where(g => g.Id == 140 && g.Team1 == "Ukraine").ToArrayAsync();
             foreach (var g in wrong)

@@ -25,7 +25,7 @@ let finishedGames: FinishedGame[] = [];
 const initialFinishedGames = 5;
 const finishedGamesIncrement = 10;
 
-const contest = 3;
+const contest = 4;
 
 let state: State = {
     upcomingGames: [],

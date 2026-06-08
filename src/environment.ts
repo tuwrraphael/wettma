@@ -1,10 +1,10 @@
 let serverUrl: string;
 
 if (__ENVIRONMENT == "local") {
-    serverUrl = "https://localhost:44308";
+    serverUrl = "http://localhost:8080";
 }
 else if (__ENVIRONMENT == "gh-pages") {
-    serverUrl = "https://wettma.azurewebsites.net";
+    serverUrl = "https://wettma.marik.ch";
 }
 
 export const environment = {
