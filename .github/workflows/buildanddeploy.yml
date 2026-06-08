@@ -6,7 +6,6 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: wettma
-  DOTNET_VERSION: '6.x.x'
 
 
 jobs:
@@ -16,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [24.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -27,30 +26,25 @@ jobs:
     - run: npm ci
     - run: npm run build -- --mode="production" --env environment="gh-pages"
     - run: cp dist/index.html dist/404.html
-    - name: Install SSH Client 🔑
-      uses: webfactory/ssh-agent@v0.4.1
+    - name: Upload static files as artifact
+      id: deployment
+      uses: actions/upload-pages-artifact@v3
       with:
-        ssh-private-key: ${{ secrets.DEPLOY_KEY }}
-    - name: Deploy 🚀
-      uses: JamesIves/github-pages-deploy-action@releases/v3
-      with:
-        SSH: true
-        BRANCH: gh-pages
-        FOLDER: dist
-        CLEAN: false
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
-    - name: dotnet build and publish
-      run: |
-        dotnet restore
-        dotnet build --configuration Release
-        dotnet publish -c Release -o './wettma' 
-      working-directory: ./server
-    - name: 'Run Azure webapp deploy action using publish profile credentials'
-      uses: azure/webapps-deploy@v2
-      with: 
-        app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE  }}
-        package: './server/wettma'
+          path: ./dist
+          
+  deploy:
+    name: Deploy to gh pages
+    needs: build
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+    if: github.ref == 'refs/heads/master'
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
