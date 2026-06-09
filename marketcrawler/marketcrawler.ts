@@ -108,13 +108,14 @@ async function predictionmarkets(request: Request) {
       const MAX_DEVIATION_MS = 60 * 60 * 1000; // 1 hour
 
       // find candidates whose slug starts with the prefix (ignore date in slug)
-      let candidates = allEvents.filter(e => typeof e.slug === 'string' && e.slug.startsWith(slugPrefix));
+      let candidates = allEvents.filter(e => typeof e.slug === 'string' && e.slug.startsWith(slugPrefix) && e.slug.length == slugPrefix.length + 10); // yyyy-mm-dd
 
       // If no candidates yet, fetch pages (lazily) until we find matches or run out
       while (candidates.length === 0) {
         // if we've exhausted pages, break
         if (cursor === null) break;
         try {
+          console.log(`Fetching events page with for ${slugPrefix} (current total candidates: ${candidates.length})`);
           const page = await fetchEventsPage(SERIES_ID, TAG_ID, cursor);
           if (!page.items || page.items.length === 0) {
             cursor = null;
@@ -122,7 +123,7 @@ async function predictionmarkets(request: Request) {
           }
 
           // check page items immediately for matching slug and usable startTime
-          const pageCandidates = page.items.filter(e => typeof e.slug === 'string' && e.slug.startsWith(slugPrefix));
+          const pageCandidates = page.items.filter(e => typeof e.slug === 'string' && e.slug.startsWith(slugPrefix) && e.slug.length == slugPrefix.length + 10); // yyyy-mm-dd
           // append page items to global store
           allEvents.push(...page.items);
           cursor = page.nextCursor;
@@ -130,14 +131,14 @@ async function predictionmarkets(request: Request) {
           if (pageCandidates.length > 0) {
             // compute startTime diffs for page candidates and check if any within allowed deviation
             const withTimes = pageCandidates
-              .map(c => ({ c, start: c.startTime || c.start_time || c.starts_at || c.start || null }))
+              .map(c => ({ c, start: c.startTime }))
               .filter(x => x.start)
               .map(x => ({ event: x.c, diff: Math.abs(new Date(x.start).getTime() - matchTime) }));
 
             const close = withTimes.filter(x => x.diff <= MAX_DEVIATION_MS);
             // append page items to global store regardless
             // if any candidates on this page are within the allowed deviation, stop fetching further
-            candidates = allEvents.filter(e => typeof e.slug === 'string' && e.slug.startsWith(slugPrefix));
+            candidates = allEvents.filter(e => typeof e.slug === 'string' && e.slug.startsWith(slugPrefix) && e.slug.length == slugPrefix.length + 10); // yyyy-mm-dd
             if (close.length > 0) break;
           }
 
@@ -156,7 +157,7 @@ async function predictionmarkets(request: Request) {
 
       // choose the candidate by startTime, but require exact match within MAX_DEVIATION_MS
       const within = candidates
-        .map(c => ({ c, start: c.startTime || c.start_time || c.starts_at || c.start || null }))
+        .map(c => ({ c, start: c.startTime }))
         .filter(x => x.start)
         .map(x => ({ event: x.c, diff: Math.abs(new Date(x.start).getTime() - matchTime) }))
         .filter(x => x.diff <= MAX_DEVIATION_MS);
@@ -164,29 +165,18 @@ async function predictionmarkets(request: Request) {
       if (within.length === 0) {
         console.log(`No time-close candidate (within 1h) for ${slugPrefix}`);
         continue;
+      } else if (within.length > 1) {
+        console.log(`Multiple time-close candidates for ${slugPrefix}, aborting to avoid ambiguity`);
+        continue;
       }
 
-      // pick the closest among the within-window candidates
-      within.sort((a, b) => a.diff - b.diff);
       const chosen = within[0].event;
-      const eventSlug = chosen.slug;
-      if (!eventSlug) {
-        console.log(`Chosen event has no slug for ${slugPrefix}`);
-        continue;
-      }
-
-      // fetch full event details (markets) by slug
-      let oddsDocRes = await fetch(`https://gamma-api.polymarket.com/events/slug/${eventSlug}`);
-      if (!oddsDocRes.ok) {
-        console.log(`Could not fetch event details for ${eventSlug}`);
-        continue;
-      }
-      let json = await oddsDocRes.json();
-      let team1Market = json.markets.find(market => market.slug == `${eventSlug}-${code1}`);
-      let team2Market = json.markets.find(market => market.slug == `${eventSlug}-${code2}`);
-      let drawMarket = json.markets.find(market => market.slug == `${eventSlug}-draw`);
+      let json = chosen;
+      let team1Market = json.markets.find(market => market.slug == `${chosen.slug}-${code1}`);
+      let team2Market = json.markets.find(market => market.slug == `${chosen.slug}-${code2}`);
+      let drawMarket = json.markets.find(market => market.slug == `${chosen.slug}-draw`);
       if (null == team1Market || null == team2Market || null == drawMarket) {
-        console.log(`Could not find markets for ${eventSlug}`);
+        console.log(`Could not find markets for ${chosen.slug}`);
         continue;
       }
       try {
