@@ -180,9 +180,16 @@ async function predictionmarkets(request: Request) {
         continue;
       }
       try {
-        const team1Odds = Number((1/parseFloat(JSON.parse(team1Market.outcomePrices)[JSON.parse(team1Market.outcomes).findIndex(o => o == "Yes")])).toFixed(2));
-        const team2Odds = Number((1/parseFloat(JSON.parse(team2Market.outcomePrices)[JSON.parse(team2Market.outcomes).findIndex(o => o == "Yes")])).toFixed(2));
-        const drawOdds = Number((1/parseFloat(JSON.parse(drawMarket.outcomePrices)[JSON.parse(drawMarket.outcomes).findIndex(o => o == "Yes")])).toFixed(2));
+
+        const cap = 40;
+
+        let team1Odds = Number((1/parseFloat(JSON.parse(team1Market.outcomePrices)[JSON.parse(team1Market.outcomes).findIndex(o => o == "Yes")])).toFixed(2));
+        let team2Odds = Number((1/parseFloat(JSON.parse(team2Market.outcomePrices)[JSON.parse(team2Market.outcomes).findIndex(o => o == "Yes")])).toFixed(2));
+        let drawOdds = Number((1/parseFloat(JSON.parse(drawMarket.outcomePrices)[JSON.parse(drawMarket.outcomes).findIndex(o => o == "Yes")])).toFixed(2));
+
+        team1Odds = Math.min(team1Odds, cap);
+        team2Odds = Math.min(team2Odds, cap);
+        drawOdds = Math.min(drawOdds, cap);
 
         output.push({
           result: null, time: new Date(m.time), team1: m.team1, team2: m.team2,
