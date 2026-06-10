@@ -95,6 +95,12 @@ async function predictionmarkets(request: Request) {
     let cursor: string | null | undefined = undefined;
 
     for (let m of matches) {
+
+      if (m.time == null || new Date(m.time).getTime() < Date.now()) {
+        console.log(`Skipping past match ${m.team1} vs ${m.team2} at ${m.time}`);
+        continue;
+      }
+
       if (!CountryToPolymarketCode[m.team1] || !CountryToPolymarketCode[m.team2]) {
         console.log(`No polymarket code for ${m.team1} or ${m.team2}`);
         continue;
