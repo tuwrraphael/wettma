@@ -23,6 +23,7 @@ namespace Wettma.Services
             await _oddsRefreshService.RefreshOdds(contestId);
             await foreach (var game in _wettmaContext.Games.Where(g => g.ContestId == contestId && null == g.Result)
                 .Select(g => g.Odds.Where(d => d.ValidUntil == g.Odds.Max(g => g.ValidUntil)).SingleOrDefault())
+                .Where(g => g != null)
                 .Select(g => new Models.Odds
                 {
                     Id = g.Id,
