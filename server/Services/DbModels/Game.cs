@@ -9,6 +9,7 @@ namespace Wettma.Services.DbModels
         public int Id { get; set; }
         public string Name { get; set; }
         public List<Game> Games { get; set; }
+        public List<WinnerTeam> WinnerTeams { get; set; }
     }
     public class Game
     {
@@ -34,6 +35,39 @@ namespace Wettma.Services.DbModels
         public Game Game { get; set; }
     }
 
+    public class WinnerTeam
+    {
+        public int ContestId { get; set; }
+        public Contest Contest { get; set; }
+        public string Team { get; set; }
+        public int Id { get; set; }
+        public bool KnockedOut { get; set; }
+
+        public List<WinnerTeamOdds> WinnerTeamOdds { get; set; }
+
+        public DateTime? NextCrawlTime { get; set; }
+    }
+
+    public class WinnerTeamOdds
+    {
+        public int Id { get; set; }
+        public int WinnerTeamId { get; set; }
+        public WinnerTeam WinnerTeam { get; set; }
+        public double Odds { get; set; }
+        public DateTime ValidUntil { get; set; }
+        public List<WinnerTeamBet> WinnerTeamBets { get; set; }
+    }
+
+    public class WinnerTeamBet
+    {
+        public int Id { get; set; }
+        public string UserId { get; set; }
+        public User User { get; set; }
+        public DateTime TimePlaced { get; set; }
+        public int WinnerTeamOddsId { get; set; }
+        public WinnerTeamOdds WinnerTeamOdds { get; set; }
+    }
+
     public class Odds
     {
         public int Id { get; set; }
@@ -53,6 +87,7 @@ namespace Wettma.Services.DbModels
         public string Id { get; set; }
         public string DisplayName { get; set; }
         public List<Bet> Bets { get; set; }
+        public List<WinnerTeamBet> WinnerTeamBets { get; set; }
     }
 
     public class Bet

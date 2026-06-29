@@ -20,6 +20,9 @@ namespace Wettma.Services
         public DbSet<User> Users { get; set; }
         public DbSet<ComputerPlayer> ComputerPlayers { get; set; }
         public DbSet<ComputerBet> ComputerBets { get; set; }
+        public DbSet<WinnerTeam> WinnerTeams { get; set; }
+        public DbSet<WinnerTeamOdds> WinnerTeamOdds { get; set; }
+        public DbSet<WinnerTeamBet> WinnerTeamBets { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -36,6 +39,11 @@ namespace Wettma.Services
             modelBuilder.Entity<Contest>().HasMany(g => g.Games)
               .WithOne(o => o.Contest)
               .HasForeignKey(o => o.ContestId);
+            modelBuilder.Entity<Contest>().HasMany(g => g.WinnerTeams)
+              .WithOne(o => o.Contest)
+              .HasForeignKey(o => o.ContestId);
+
+
             modelBuilder.Entity<Game>()
                 .HasKey(g => g.Id);
             modelBuilder.Entity<Game>()
@@ -135,6 +143,45 @@ namespace Wettma.Services
                 .HasOne(p => p.Odds)
                 .WithMany(p => p.ComputerBets)
                 .HasForeignKey(p => p.OddsId)
+                .IsRequired();
+
+            modelBuilder.Entity<WinnerTeam>()
+                .HasKey(g => g.Id);
+            modelBuilder.Entity<WinnerTeam>()
+                .Property(g => g.Team)
+                .IsRequired();
+            modelBuilder.Entity<WinnerTeam>().HasMany(g => g.WinnerTeamOdds)
+                .WithOne(o => o.WinnerTeam)
+                .HasForeignKey(o => o.WinnerTeamId);
+            modelBuilder.Entity<WinnerTeam>().Property(g => g.KnockedOut)
+                .HasDefaultValue(false);
+
+            modelBuilder.Entity<WinnerTeamOdds>()
+                .HasKey(g => g.Id);
+            modelBuilder.Entity<WinnerTeamOdds>()
+                .Property(g => g.Id)
+                .ValueGeneratedOnAdd();
+            modelBuilder.Entity<WinnerTeamOdds>()
+                .Property(g => g.ValidUntil)
+                .IsRequired();
+
+            modelBuilder.Entity<WinnerTeamBet>()
+                .HasKey(g => g.Id);
+            modelBuilder.Entity<WinnerTeamBet>()
+                .Property(g => g.Id)
+                .ValueGeneratedOnAdd();
+            modelBuilder.Entity<WinnerTeamBet>()
+                .Property(g => g.TimePlaced)
+                .IsRequired();
+            modelBuilder.Entity<WinnerTeamBet>()
+                .HasOne(p => p.User)
+                .WithMany(p => p.WinnerTeamBets)
+                .HasForeignKey(p => p.UserId)
+                .IsRequired();
+            modelBuilder.Entity<WinnerTeamBet>()
+                .HasOne(p => p.WinnerTeamOdds)
+                .WithMany(p => p.WinnerTeamBets)
+                .HasForeignKey(p => p.WinnerTeamOddsId)
                 .IsRequired();
         }
     }
