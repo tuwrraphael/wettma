@@ -6,6 +6,8 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: wettma
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 
 
 jobs:
