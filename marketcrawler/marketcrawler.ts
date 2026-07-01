@@ -76,7 +76,7 @@ async function predictionmarkets(request: Request) {
     // Lazy keyset pagination: fetch pages only when a match has no candidates
     async function fetchEventsPage(seriesId: string, tagId: string, afterCursor?: string) {
       const cursorPart = afterCursor ? `&after_cursor=${encodeURIComponent(afterCursor)}` : "";
-      const keysetUrl = `https://gamma-api.polymarket.com/events/keyset?series_id=${encodeURIComponent(seriesId)}&limit=100&tag_id=${encodeURIComponent(tagId)}${cursorPart}`;
+      const keysetUrl = `https://gamma-api.polymarket.com/events/keyset?series_id=${encodeURIComponent(seriesId)}&limit=100&tag_id=${encodeURIComponent(tagId)}&closed=false${cursorPart}`;
       const res = await fetch(keysetUrl);
       if (!res.ok) {
         throw new Error(`keyset fetch failed ${res.status}: ${await res.text()}`);
