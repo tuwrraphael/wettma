@@ -98,6 +98,13 @@ new Game() { Id = 251, Time = new DateTimeOffset(2026, 7, 3, 3, 0, 0, 0, utc).Ut
 new Game() { Id = 252, Time = new DateTimeOffset(2026, 7, 3, 18, 0, 0, 0, utc).UtcDateTime, Team1 = "Australien", Team2 = "Ägypten", Points = 4.0, DoesNotSupportDraw = true, ContestId = 4},
 new Game() { Id = 253, Time = new DateTimeOffset(2026, 7, 3, 22, 0, 0, 0, utc).UtcDateTime, Team1 = "Argentinien", Team2 = "Kap Verde", Points = 4.0, DoesNotSupportDraw = true, ContestId = 4},
 new Game() { Id = 254, Time = new DateTimeOffset(2026, 7, 4, 1, 30, 0, 0, utc).UtcDateTime, Team1 = "Kolumbien", Team2 = "Ghana", Points = 4.0, DoesNotSupportDraw = true, ContestId = 4}
+
+new Game() { Id = 255, Time = new DateTimeOffset(2026, 7, 4, 17, 0, 0, 0, utc).UtcDateTime, Team1 = "Kanada", Team2 = "Marokko", Points = 5.0, DoesNotSupportDraw = true, ContestId = 4},
+new Game() { Id = 256, Time = new DateTimeOffset(2026, 7, 4, 21, 0, 0, 0, utc).UtcDateTime, Team1 = "Paraguay", Team2 = "Frankreich", Points = 5.0, DoesNotSupportDraw = true, ContestId = 4},
+new Game() { Id = 257, Time = new DateTimeOffset(2026, 7, 5, 20, 0, 0, 0, utc).UtcDateTime, Team1 = "Brasilien", Team2 = "Norwegen", Points = 5.0, DoesNotSupportDraw = true, ContestId = 4},
+new Game() { Id = 258, Time = new DateTimeOffset(2026, 7, 6, 0, 0, 0, 0, utc).UtcDateTime, Team1 = "Mexiko", Team2 = "England", Points = 5.0, DoesNotSupportDraw = true, ContestId = 4},
+new Game() { Id = 259, Time = new DateTimeOffset(2026, 7, 6, 19, 0, 0, 0, utc).UtcDateTime, Team1 = "Portugal", Team2 = "Spanien", Points = 5.0, DoesNotSupportDraw = true, ContestId = 4},
+new Game() { Id = 260, Time = new DateTimeOffset(2026, 7, 7, 0, 0, 0, 0, utc).UtcDateTime, Team1 = "USA", Team2 = "Belgien", Points = 5.0, DoesNotSupportDraw = true, ContestId = 4},
             };
             return games;
         }
